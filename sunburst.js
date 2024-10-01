@@ -1,6 +1,4 @@
-import * as d3 from "d3";
-
-export function createChart(data) {
+function _chart(d3, data) {
   // Specify the chart's dimensions.
   const width = 928;
   const height = width;
@@ -84,24 +82,6 @@ export function createChart(data) {
     return Math.max(minFontSize, maxFontSize);
   }
 
-  // Function to insert line breaks
-  function insertLineBreaks(text) {
-    const words = text.split(/\s+/);
-    let lines = [];
-    let currentLine = words[0];
-
-    for (let i = 1; i < words.length; i++) {
-      if (currentLine.length + words[i].length + 1 <= 10) {
-        currentLine += " " + words[i];
-      } else {
-        lines.push(currentLine);
-        currentLine = words[i];
-      }
-    }
-    lines.push(currentLine);
-    return lines;
-  }
-
   const label = svg
     .append("g")
     .attr("pointer-events", "none")
@@ -114,15 +94,7 @@ export function createChart(data) {
     .attr("fill-opacity", (d) => +labelVisible(d.current))
     .attr("transform", (d) => labelTransform(d.current))
     .style("font-size", (d) => `${calculateFontSize(d)}px`)
-    .each(function(d) {
-      const lines = insertLineBreaks(d.data.name);
-      d3.select(this).selectAll("tspan")
-        .data(lines)
-        .join("tspan")
-        .attr("x", 0)
-        .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
-        .text(d => d);
-    });
+    .text((d) => d.data.name);
 
   const parent = svg
     .append("circle")
@@ -153,7 +125,7 @@ export function createChart(data) {
     .attr("dy", "0.35em")
     .attr("font-size", "7px")
     .attr("fill-opacity", 0)
-    .text("Click to go back");
+    .text("Go to previous layer");
 
   parent
     .on("mouseover", () => {
@@ -216,18 +188,9 @@ export function createChart(data) {
         const i = d3.interpolate(d.current, d.target);
         return function(t) {
           d.current = i(t);
-          const fontSize = calculateFontSize(d);
           d3.select(this)
-            .style("font-size", `${fontSize}px`)
+            .style("font-size", `${calculateFontSize(d)}px`)
             .attr("transform", labelTransform(d.current));
-          
-          const lines = insertLineBreaks(d.data.name);
-          d3.select(this).selectAll("tspan")
-            .data(lines)
-            .join("tspan")
-            .attr("x", 0)
-            .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
-            .text(d => d);
         };
       });
   }
@@ -247,4 +210,20 @@ export function createChart(data) {
   }
 
   return svg.node();
+}
+
+function _data(FileAttachment) {
+  return FileAttachment("data.json").json();
+}
+
+export default function define(runtime, observer) {
+  const main = runtime.module();
+  function toString() { return this.url; }
+  const fileAttachments = new Map([
+    ["data.json", {url: new URL("./data/data.json", import.meta.url), mimeType: "application/json", toString}]
+  ]);
+  main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
+  main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
+  main.variable(observer("data")).define("data", ["FileAttachment"], _data);
+  return main;
 }
