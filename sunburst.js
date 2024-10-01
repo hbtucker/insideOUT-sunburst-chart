@@ -110,7 +110,7 @@ function _chart(d3, data) {
     .attr("y", -10)
     .attr("width", 80)
     .attr("height", 20)
-    .attr("fill", "rgba(255, 255, 255, 0.9)")
+    .attr("fill", "#f0f0f0")
     .attr("rx", 5)
     .attr("ry", 5)
     .attr("fill-opacity", 0);
@@ -203,4 +203,20 @@ function _chart(d3, data) {
   }
 
   return svg.node();
+}
+
+function _data(FileAttachment) {
+  return FileAttachment("data.json").json();
+}
+
+export default function define(runtime, observer) {
+  const main = runtime.module();
+  function toString() { return this.url; }
+  const fileAttachments = new Map([
+    ["data.json", {url: new URL("./data/data.json", import.meta.url), mimeType: "application/json", toString}]
+  ]);
+  main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
+  main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
+  main.variable(observer("data")).define("data", ["FileAttachment"], _data);
+  return main;
 }
