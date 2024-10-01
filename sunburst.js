@@ -37,14 +37,14 @@ function _chart(d3,data)
   // Create the SVG container.
   const svg = d3
     .create("svg")
-    .attr("viewBox", [0, 0, width, height])
+    .attr("viewBox", [-width / 2, -height / 2, width, width])
     .style("font-family", "'Poppins', sans-serif")
-    .style("font-size", "6px");
+    .style("font-size", "12px");
 
     // Add background
   svg.append("rect")
-      .attr("width", width)
-      .attr("height", height)
+      .attr("width / 2", width)
+      .attr("height / 2", height)
       .attr("fill", "#fff");
 
   // Append the arcs.
