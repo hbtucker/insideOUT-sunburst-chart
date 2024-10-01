@@ -7,7 +7,7 @@ function _chart(d3,data)
   // Specify the chart’s dimensions.
   const width = 928;
   const height = width;
-  const radius = width / 8;
+  const radius = width / 12;
 
   // Create the color scale.
   const color = d3.scaleOrdinal(
@@ -39,7 +39,7 @@ function _chart(d3,data)
     .create("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, width])
     .style("font-family", "'Poppins', sans-serif")
-    .style("font-size", "12px");
+    .style("font-size", "9px");
 
   // Append the arcs.
   const path = svg
