@@ -1,0 +1,194 @@
+{
+  "name": "insideOUT",
+  "children": [
+    {
+      "name": "Engineering",
+      "children": [
+        {
+          "name": "Web Development",
+          "children": [
+            {
+              "name": "Alice Johnson",
+              "title": "Senior Frontend Developer",
+              "value": 3500,
+			  "children": [
+					{
+					  "name": "Maintain public site",
+					  "value": 1500
+					},
+					{
+					  "name": "Manage style guide",
+					  "value": 1500
+					},
+					{
+					  "name": "React charts",
+					  "value": 1500
+					}
+          ]
+        },
+            {
+              "name": "Bob Smith",
+              "title": "Backend Engineer",
+              "value": 3500
+            },
+            {
+              "name": "Charlie Davis",
+              "title": "Full Stack Developer",
+              "value": 3500
+            },
+            {
+              "name": "Diana Lee",
+              "title": "UI/UX Developer",
+              "value": 3500
+            }
+          ]
+        },
+        {
+          "name": "Mobile Development",
+          "children": [
+            {
+              "name": "Eva Martinez",
+              "title": "iOS Developer",
+              "value": 3500
+            },
+            {
+              "name": "Frank Chen",
+              "title": "Android Developer",
+              "value": 3500
+            },
+            {
+              "name": "Grace Kim",
+              "title": "Mobile QA Engineer",
+              "value": 3500
+            },
+            {
+              "name": "Henry Wilson",
+              "title": "Cross-Platform Developer",
+              "value": 3500
+            }
+          ]
+        },
+        {
+          "name": "DevOps",
+          "children": [
+            {
+              "name": "Irene Taylor",
+              "title": "DevOps Engineer",
+              "value": 3500
+            },
+            {
+              "name": "Jack Brown",
+              "title": "Site Reliability Engineer",
+              "value": 3500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Product Management",
+      "children": [
+        {
+          "name": "User Experience",
+          "children": [
+            {
+              "name": "Karen White",
+              "title": "UX Researcher",
+              "value": 3500
+            },
+            {
+              "name": "Liam Garcia",
+              "title": "UI Designer",
+              "value": 3500
+            },
+            {
+              "name": "Mia Robinson",
+              "title": "Interaction Designer",
+              "value": 3500
+            }
+          ]
+        },
+        {
+          "name": "Product Strategy",
+          "children": [
+            {
+              "name": "Nathan Scott",
+              "title": "Senior Product Manager",
+              "value": 3500
+            },
+            {
+              "name": "Olivia Patel",
+              "title": "Product Owner",
+              "value": 3500
+            }
+          ]
+        }
+      ]
+    },
+	{    
+    	"name": "Governance",
+        "children": [
+        {
+          "name": "Exec",
+          "children": [
+		  {
+              "name": "Dave Smith",
+			  "title": "COO",
+              "value": 3500
+            },
+            {
+              "name": "Sarah Thompson",
+			  "title": "CEO",
+              "value": 3500
+            },
+            {
+              "name": "Carlos Menzes",
+			  "title": "CTO",
+              "value": 3500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "children": [
+        {
+          "name": "Enterprise Sales",
+          "children": [
+            {
+              "name": "Paul Thompson",
+              "title": "Enterprise Account Executive",
+              "value": 3500
+            },
+            {
+              "name": "Quinn Anderson",
+              "title": "Solutions Architect",
+              "value": 3500
+            },
+            {
+              "name": "Rachel Murphy",
+              "title": "Sales Engineer",
+              "value": 3500
+            }
+          ]
+        },
+        {
+          "name": "SMB Sales",
+          "children": [
+            {
+              "name": "Samuel Lee",
+              "title": "SMB Sales Representative",
+              "value": 3500
+            },
+            {
+              "name": "Tina Foster",
+              "title": "Inside Sales Specialist",
+              "value": 3500
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@inside-out/sunburst",
+  "main": "sumburst.js",
+  "version": "403.0.0",
+  "homepage": "https://observablehq.com/@inside-out/sunburst",
+  "author": {
+    "name": "insideOUT",
+    "url": "https://observablehq.com/@inside-out"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}
