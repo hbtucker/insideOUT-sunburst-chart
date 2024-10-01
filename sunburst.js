@@ -125,7 +125,7 @@ function _chart(d3, data) {
     .attr("dy", "0.35em")
     .attr("font-size", "7px")
     .attr("fill-opacity", 0)
-    .text("Click to go back");
+    .text("Go to previous layer");
 
   parent
     .on("mouseover", () => {
