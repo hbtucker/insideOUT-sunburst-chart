@@ -9,37 +9,79 @@
           "children": [
             {
               "name": "Alice Johnson",
-              "title": "Senior Frontend Developer",
+              "title": "Senior Frontend\nDeveloper",
               "value": 3500,
-			  "children": [
-					{
-					  "name": "Maintain public site",
-					  "value": 1500
-					},
-					{
-					  "name": "Manage style guide",
-					  "value": 1500
-					},
-					{
-					  "name": "React charts",
-					  "value": 1500
-					}
-          ]
-        },
+              "children": [
+                {
+                  "name": "Maintain public\nsite",
+                  "value": 1500
+                },
+                {
+                  "name": "Manage style\nguide",
+                  "value": 1500
+                },
+                {
+                  "name": "React charts",
+                  "value": 1500
+                }
+              ]
+            },
             {
               "name": "Bob Smith",
               "title": "Backend Engineer",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "API development",
+                  "value": 1200
+                },
+                {
+                  "name": "Database\noptimization",
+                  "value": 1200
+                },
+                {
+                  "name": "Server\nmanagement",
+                  "value": 1100
+                }
+              ]
             },
             {
               "name": "Charlie Davis",
-              "title": "Full Stack Developer",
-              "value": 3500
+              "title": "Full Stack\nDeveloper",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Feature\nimplementation",
+                  "value": 1200
+                },
+                {
+                  "name": "Code reviews",
+                  "value": 1000
+                },
+                {
+                  "name": "Technical\ndocumentation",
+                  "value": 1300
+                }
+              ]
             },
             {
               "name": "Diana Lee",
               "title": "UI/UX Developer",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Prototyping",
+                  "value": 1200
+                },
+                {
+                  "name": "User testing",
+                  "value": 1100
+                },
+                {
+                  "name": "Design system\nmaintenance",
+                  "value": 1200
+                }
+              ]
             }
           ]
         },
@@ -49,22 +91,78 @@
             {
               "name": "Eva Martinez",
               "title": "iOS Developer",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "iOS app\ndevelopment",
+                  "value": 1500
+                },
+                {
+                  "name": "Swift\noptimization",
+                  "value": 1000
+                },
+                {
+                  "name": "App Store\ndeployment",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Frank Chen",
               "title": "Android Developer",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Android app\ndevelopment",
+                  "value": 1500
+                },
+                {
+                  "name": "Kotlin\noptimization",
+                  "value": 1000
+                },
+                {
+                  "name": "Play Store\ndeployment",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Grace Kim",
-              "title": "Mobile QA Engineer",
-              "value": 3500
+              "title": "Mobile QA\nEngineer",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Test case\ndevelopment",
+                  "value": 1200
+                },
+                {
+                  "name": "Automated\ntesting",
+                  "value": 1300
+                },
+                {
+                  "name": "Bug tracking",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Henry Wilson",
-              "title": "Cross-Platform Developer",
-              "value": 3500
+              "title": "Cross-Platform\nDeveloper",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "React Native\ndevelopment",
+                  "value": 1500
+                },
+                {
+                  "name": "Performance\noptimization",
+                  "value": 1000
+                },
+                {
+                  "name": "Cross-platform\nintegration",
+                  "value": 1000
+                }
+              ]
             }
           ]
         },
@@ -74,12 +172,40 @@
             {
               "name": "Irene Taylor",
               "title": "DevOps Engineer",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "CI/CD pipeline\nmanagement",
+                  "value": 1200
+                },
+                {
+                  "name": "Infrastructure\nas code",
+                  "value": 1300
+                },
+                {
+                  "name": "Monitoring and\nlogging",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Jack Brown",
-              "title": "Site Reliability Engineer",
-              "value": 3500
+              "title": "Site Reliability\nEngineer",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "System\nscalability",
+                  "value": 1200
+                },
+                {
+                  "name": "Incident\nresponse",
+                  "value": 1100
+                },
+                {
+                  "name": "Performance\ntuning",
+                  "value": 1200
+                }
+              ]
             }
           ]
         }
@@ -94,17 +220,59 @@
             {
               "name": "Karen White",
               "title": "UX Researcher",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "User interviews",
+                  "value": 1200
+                },
+                {
+                  "name": "Usability\ntesting",
+                  "value": 1300
+                },
+                {
+                  "name": "Research\nanalysis",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Liam Garcia",
               "title": "UI Designer",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Visual design",
+                  "value": 1500
+                },
+                {
+                  "name": "Prototyping",
+                  "value": 1000
+                },
+                {
+                  "name": "Design system\nmaintenance",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Mia Robinson",
-              "title": "Interaction Designer",
-              "value": 3500
+              "title": "Interaction\nDesigner",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "User flow\ndesign",
+                  "value": 1200
+                },
+                {
+                  "name": "Wireframing",
+                  "value": 1100
+                },
+                {
+                  "name": "Interaction\nprototypes",
+                  "value": 1200
+                }
+              ]
             }
           ]
         },
@@ -113,38 +281,108 @@
           "children": [
             {
               "name": "Nathan Scott",
-              "title": "Senior Product Manager",
-              "value": 3500
+              "title": "Senior Product\nManager",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Product roadmap",
+                  "value": 1200
+                },
+                {
+                  "name": "Feature\nprioritization",
+                  "value": 1300
+                },
+                {
+                  "name": "Stakeholder\nmanagement",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Olivia Patel",
               "title": "Product Owner",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Backlog\nmanagement",
+                  "value": 1200
+                },
+                {
+                  "name": "Sprint planning",
+                  "value": 1100
+                },
+                {
+                  "name": "User story\nwriting",
+                  "value": 1200
+                }
+              ]
             }
           ]
         }
       ]
     },
-	{    
-    	"name": "Governance",
-        "children": [
+    {    
+      "name": "Governance",
+      "children": [
         {
           "name": "Exec",
           "children": [
-		  {
+            {
               "name": "Dave Smith",
-			  "title": "COO",
-              "value": 3500
+              "title": "COO",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Operations\nmanagement",
+                  "value": 1200
+                },
+                {
+                  "name": "Resource\nallocation",
+                  "value": 1300
+                },
+                {
+                  "name": "Process\nimprovement",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Sarah Thompson",
-			  "title": "CEO",
-              "value": 3500
+              "title": "CEO",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Strategic\nplanning",
+                  "value": 1200
+                },
+                {
+                  "name": "Investor\nrelations",
+                  "value": 1100
+                },
+                {
+                  "name": "Company vision",
+                  "value": 1200
+                }
+              ]
             },
             {
               "name": "Carlos Menzes",
-			  "title": "CTO",
-              "value": 3500
+              "title": "CTO",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Tech strategy",
+                  "value": 1200
+                },
+                {
+                  "name": "Innovation\nmanagement",
+                  "value": 1300
+                },
+                {
+                  "name": "Technical\nleadership",
+                  "value": 1000
+                }
+              ]
             }
           ]
         }
@@ -158,18 +396,60 @@
           "children": [
             {
               "name": "Paul Thompson",
-              "title": "Enterprise Account Executive",
-              "value": 3500
+              "title": "Enterprise Account\nExecutive",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Client\nacquisition",
+                  "value": 1200
+                },
+                {
+                  "name": "Contract\nnegotiation",
+                  "value": 1300
+                },
+                {
+                  "name": "Relationship\nmanagement",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Quinn Anderson",
               "title": "Solutions Architect",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Technical\nconsulting",
+                  "value": 1200
+                },
+                {
+                  "name": "Solution design",
+                  "value": 1300
+                },
+                {
+                  "name": "Proof of concept\ndevelopment",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Rachel Murphy",
               "title": "Sales Engineer",
-              "value": 3500
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Technical demos",
+                  "value": 1200
+                },
+                {
+                  "name": "RFP responses",
+                  "value": 1100
+                },
+                {
+                  "name": "Product\ncustomization",
+                  "value": 1200
+                }
+              ]
             }
           ]
         },
@@ -178,13 +458,41 @@
           "children": [
             {
               "name": "Samuel Lee",
-              "title": "SMB Sales Representative",
-              "value": 3500
+              "title": "SMB Sales\nRepresentative",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Lead generation",
+                  "value": 1200
+                },
+                {
+                  "name": "Sales pipeline\nmanagement",
+                  "value": 1300
+                },
+                {
+                  "name": "Product demos",
+                  "value": 1000
+                }
+              ]
             },
             {
               "name": "Tina Foster",
-              "title": "Inside Sales Specialist",
-              "value": 3500
+              "title": "Inside Sales\nSpecialist",
+              "value": 3500,
+              "children": [
+                {
+                  "name": "Inbound lead\nqualification",
+                  "value": 1200
+                },
+                {
+                  "name": "Outbound\nprospecting",
+                  "value": 1100
+                },
+                {
+                  "name": "Sales process\noptimization",
+                  "value": 1200
+                }
+              ]
             }
           ]
         }
