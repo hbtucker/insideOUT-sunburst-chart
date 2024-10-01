@@ -181,6 +181,5 @@ export default function define(runtime, observer) {
   main.variable(observer()).define(["md"], _1);
   main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
   main.variable(observer("data")).define("data", ["FileAttachment"], _data);
-  main.variable(observer("data1")).define("data1", ["FileAttachment"], _data1);
   return main;
 }
