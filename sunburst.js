@@ -103,7 +103,7 @@ function _chart(d3, data) {
   const tooltip = svg.append("text")
     .attr("text-anchor", "middle")
     .attr("dy", "0.35em")
-    .attr("font-size", "10px")
+    .attr("font-size", "7px")
     .attr("fill-opacity", 0)
     .text("Click this circle to return to the previous layer");
 
