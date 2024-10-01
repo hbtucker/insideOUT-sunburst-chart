@@ -39,13 +39,11 @@ function _chart(d3,data)
     .create("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, width])
     .style("font-family", "'Poppins', sans-serif")
-    .style("font-size", "12px");
-
-    // Add background
-  svg.append("rect")
-      .attr("width / 2", width)
-      .attr("height / 2", height)
-      .attr("fill", "#fff");
+    .style("font-size", "12px")
+    .attr(
+      "style",
+      `max-width: 100%; height: auto; display: block; margin: 0 -14px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
+    );
 
   // Append the arcs.
   const path = svg
