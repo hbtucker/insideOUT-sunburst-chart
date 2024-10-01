@@ -177,3 +177,19 @@ function _chart(d3, data) {
 
   return svg.node();
 }
+
+function _data(FileAttachment) {
+  return FileAttachment("data.json").json();
+}
+
+export default function define(runtime, observer) {
+  const main = runtime.module();
+  function toString() { return this.url; }
+  const fileAttachments = new Map([
+    ["data.json", {url: new URL("./data/data.json", import.meta.url), mimeType: "application/json", toString}]
+  ]);
+  main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
+  main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
+  main.variable(observer("data")).define("data", ["FileAttachment"], _data);
+  return main;
+}
