@@ -73,8 +73,13 @@ function _chart(d3, data) {
 
   // Function to calculate font size
   function calculateFontSize(d) {
-    const arcLength = (d.x1 - d.x0) * (d.y1 - d.y0) * radius;
-    return Math.max(8, Math.min(14, arcLength / 6));
+    const node = d.current;
+    const angle = node.x1 - node.x0;
+    const radius = (node.y0 + node.y1) / 2;
+    const circumference = angle * radius;
+    const maxFontSize = Math.min(14, circumference / 4);
+    const minFontSize = 8;
+    return Math.max(minFontSize, maxFontSize);
   }
 
   const label = svg
@@ -88,7 +93,7 @@ function _chart(d3, data) {
     .attr("dy", "0.35em")
     .attr("fill-opacity", (d) => +labelVisible(d.current))
     .attr("transform", (d) => labelTransform(d.current))
-    .style("font-size", (d) => `${calculateFontSize(d.current)}px`)
+    .style("font-size", (d) => `${calculateFontSize(d)}px`)
     .text((d) => d.data.name);
 
   const parent = svg
@@ -179,11 +184,13 @@ function _chart(d3, data) {
       .transition(t)
       .attr("fill-opacity", (d) => +labelVisible(d.target))
       .attrTween("transform", (d) => () => labelTransform(d.current))
-      .tween("text", (d) => {
+      .tween("text", function(d) {
         const i = d3.interpolate(d.current, d.target);
-        return (t) => {
+        return function(t) {
           d.current = i(t);
-          this.style.fontSize = `${calculateFontSize(d.current)}px`;
+          d3.select(this)
+            .style("font-size", `${calculateFontSize(d)}px`)
+            .attr("transform", labelTransform(d.current));
         };
       });
   }
