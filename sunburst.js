@@ -99,6 +99,18 @@ function _chart(d3,data)
     .attr("pointer-events", "all")
     .on("click", clicked);
 
+  // Add tooltip to the center circle
+  const tooltip = svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .attr("font-size", "9px")
+    .attr("fill-opacity", 0)
+    .text("Click this circle to return to the previous layer");
+
+  parent
+    .on("mouseover", () => tooltip.attr("fill-opacity", 1))
+    .on("mouseout", () => tooltip.attr("fill-opacity", 0));
+
   // Handle zoom on click.
   function clicked(event, p) {
     parent.datum(p.parent || root);
