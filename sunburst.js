@@ -39,10 +39,10 @@ function _chart(d3,data)
     .create("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, width])
     .style("font-family", "'Poppins', sans-serif")
-    .style("font-size", "6px")
+    .style("font-size", "4px")
     .attr(
       "style",
-      `max-width: 100%; height: auto; display: block; margin: 0 -14px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
+      `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
     );
 
   // Append the arcs.
@@ -103,7 +103,7 @@ function _chart(d3,data)
   const tooltip = svg.append("text")
     .attr("text-anchor", "middle")
     .attr("dy", "0.35em")
-    .attr("font-size", "6px")
+    .attr("font-size", "4px")
     .attr("fill-opacity", 0)
     .text("Click this circle to return to the previous layer");
 
