@@ -1,4 +1,6 @@
-function _chart(d3, data) {
+import * as d3 from "d3";
+
+export function createChart(data) {
   // Specify the chart's dimensions.
   const width = 928;
   const height = width;
