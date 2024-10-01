@@ -37,7 +37,7 @@ function _chart(d3,data)
   // Create the SVG container.
   const svg = d3
     .create("svg")
-    .attr("viewBox", [-width / 2, -height / 2, width, width])
+    .attr("viewBox", [0, 0, width, height])
     .style("font-family", "'Poppins', sans-serif")
     .style("font-size", "6px");
 
