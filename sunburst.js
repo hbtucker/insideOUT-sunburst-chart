@@ -1,10 +1,5 @@
-function _1(md){return(
-md``
-)}
-
-function _chart(d3,data)
-{
-  // Specify the chart’s dimensions.
+function _chart(d3, data) {
+  // Specify the chart's dimensions.
   const width = 928;
   const height = width;
   const radius = width / 12;
@@ -39,7 +34,6 @@ function _chart(d3,data)
     .create("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, width])
     .style("font-family", "'Poppins', sans-serif")
-    .style("font-size", "4px")
     .attr(
       "style",
       `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
@@ -59,7 +53,6 @@ function _chart(d3,data)
       arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0
     )
     .attr("pointer-events", (d) => (arcVisible(d.current) ? "auto" : "none"))
-
     .attr("d", (d) => arc(d.current));
 
   // Make them clickable if they have children.
@@ -78,6 +71,12 @@ function _chart(d3,data)
         .join("/")}\n${format(d.value)}`
   );
 
+  // Function to calculate font size
+  function calculateFontSize(d) {
+    const arcLength = (d.x1 - d.x0) * (d.y1 - d.y0) * radius;
+    return Math.max(8, Math.min(14, arcLength / 6));
+  }
+
   const label = svg
     .append("g")
     .attr("pointer-events", "none")
@@ -89,6 +88,7 @@ function _chart(d3,data)
     .attr("dy", "0.35em")
     .attr("fill-opacity", (d) => +labelVisible(d.current))
     .attr("transform", (d) => labelTransform(d.current))
+    .style("font-size", (d) => `${calculateFontSize(d.current)}px`)
     .text((d) => d.data.name);
 
   const parent = svg
@@ -103,7 +103,7 @@ function _chart(d3,data)
   const tooltip = svg.append("text")
     .attr("text-anchor", "middle")
     .attr("dy", "0.35em")
-    .attr("font-size", "4px")
+    .attr("font-size", "10px")
     .attr("fill-opacity", 0)
     .text("Click this circle to return to the previous layer");
 
@@ -133,7 +133,7 @@ function _chart(d3,data)
 
     const t = svg.transition().duration(750);
 
-    // Transition the data on all arcs, even the ones that aren’t visible,
+    // Transition the data on all arcs, even the ones that aren't visible,
     // so that if this transition is interrupted, entering arcs will start
     // the next transition from the desired position.
     path
@@ -149,7 +149,6 @@ function _chart(d3,data)
         arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0
       )
       .attr("pointer-events", (d) => (arcVisible(d.target) ? "auto" : "none"))
-
       .attrTween("d", (d) => () => arc(d.current));
 
     label
@@ -158,7 +157,8 @@ function _chart(d3,data)
       })
       .transition(t)
       .attr("fill-opacity", (d) => +labelVisible(d.target))
-      .attrTween("transform", (d) => () => labelTransform(d.current));
+      .attrTween("transform", (d) => () => labelTransform(d.current))
+      .styleTween("font-size", (d) => () => `${calculateFontSize(d.current)}px`);
   }
 
   function arcVisible(d) {
@@ -176,26 +176,4 @@ function _chart(d3,data)
   }
 
   return svg.node();
-}
-
-
-function _data(FileAttachment){return(
-FileAttachment("data.json").json()
-)}
-
-function _data1(FileAttachment){return(
-FileAttachment("data.json").json()
-)}
-
-export default function define(runtime, observer) {
-  const main = runtime.module();
-  function toString() { return this.url; }
-  const fileAttachments = new Map([
-    ["data.json", {url: new URL("./data/data.json", import.meta.url), mimeType: "application/json", toString}]
-  ]);
-  main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
-  main.variable(observer()).define(["md"], _1);
-  main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
-  main.variable(observer("data")).define("data", ["FileAttachment"], _data);
-  return main;
 }
