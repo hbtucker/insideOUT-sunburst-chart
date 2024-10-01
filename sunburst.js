@@ -39,7 +39,7 @@ function _chart(d3,data)
     .create("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, width])
     .style("font-family", "'Poppins', sans-serif")
-    .style("font-size", "12px")
+    .style("font-size", "8px")
     .attr(
       "style",
       `max-width: 100%; height: auto; display: block; margin: 0 -14px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
