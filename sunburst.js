@@ -100,16 +100,37 @@ function _chart(d3, data) {
     .on("click", clicked);
 
   // Add tooltip to the center circle
-  const tooltip = svg.append("text")
+  const tooltipG = svg.append("g")
+    .attr("pointer-events", "all")
+    .style("cursor", "pointer")
+    .on("click", () => clicked(null, parent.datum()));
+
+  const tooltipRect = tooltipG.append("rect")
+    .attr("x", -40)
+    .attr("y", -10)
+    .attr("width", 80)
+    .attr("height", 20)
+    .attr("fill", "rgba(255, 255, 255, 0.9)")
+    .attr("rx", 5)
+    .attr("ry", 5)
+    .attr("fill-opacity", 0);
+
+  const tooltipText = tooltipG.append("text")
     .attr("text-anchor", "middle")
     .attr("dy", "0.35em")
     .attr("font-size", "7px")
     .attr("fill-opacity", 0)
-    .text("Click this circle to return to the previous layer");
+    .text("Click to go back");
 
   parent
-    .on("mouseover", () => tooltip.attr("fill-opacity", 1))
-    .on("mouseout", () => tooltip.attr("fill-opacity", 0));
+    .on("mouseover", () => {
+      tooltipRect.attr("fill-opacity", 0.9);
+      tooltipText.attr("fill-opacity", 1);
+    })
+    .on("mouseout", () => {
+      tooltipRect.attr("fill-opacity", 0);
+      tooltipText.attr("fill-opacity", 0);
+    });
 
   // Handle zoom on click.
   function clicked(event, p) {
@@ -158,7 +179,13 @@ function _chart(d3, data) {
       .transition(t)
       .attr("fill-opacity", (d) => +labelVisible(d.target))
       .attrTween("transform", (d) => () => labelTransform(d.current))
-      .styleTween("font-size", (d) => () => `${calculateFontSize(d.current)}px`);
+      .tween("text", (d) => {
+        const i = d3.interpolate(d.current, d.target);
+        return (t) => {
+          d.current = i(t);
+          this.style.fontSize = `${calculateFontSize(d.current)}px`;
+        };
+      });
   }
 
   function arcVisible(d) {
@@ -176,20 +203,4 @@ function _chart(d3, data) {
   }
 
   return svg.node();
-}
-
-function _data(FileAttachment) {
-  return FileAttachment("data.json").json();
-}
-
-export default function define(runtime, observer) {
-  const main = runtime.module();
-  function toString() { return this.url; }
-  const fileAttachments = new Map([
-    ["data.json", {url: new URL("./data/data.json", import.meta.url), mimeType: "application/json", toString}]
-  ]);
-  main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
-  main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
-  main.variable(observer("data")).define("data", ["FileAttachment"], _data);
-  return main;
 }
