@@ -41,6 +41,12 @@ function _chart(d3,data)
     .style("font-family", "'Poppins', sans-serif")
     .style("font-size", "6px");
 
+    // Add background
+  svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "#fff");
+
   // Append the arcs.
   const path = svg
     .append("g")
