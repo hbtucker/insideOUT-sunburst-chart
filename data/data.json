@@ -167,11 +167,11 @@
           ]
         },
         {
-          "name": "DevOps",
+          "name": "Platform",
           "children": [
             {
               "name": "Irene Taylor",
-              "title": "DevOps Engineer",
+              "title": "Platform Engineer",
               "value": 3500,
               "children": [
                 {
