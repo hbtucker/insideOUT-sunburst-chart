@@ -9,15 +9,15 @@
           "children": [
             {
               "name": "Alice Johnson",
-              "title": "Senior Frontend\nDeveloper",
+              "title": "Senior Frontend Developer",
               "value": 3500,
               "children": [
                 {
-                  "name": "Maintain public\nsite",
+                  "name": "Maintain public site",
                   "value": 1500
                 },
                 {
-                  "name": "Manage style\nguide",
+                  "name": "Manage style guide",
                   "value": 1500
                 },
                 {
@@ -36,22 +36,22 @@
                   "value": 1200
                 },
                 {
-                  "name": "Database\noptimization",
+                  "name": "Database optimization",
                   "value": 1200
                 },
                 {
-                  "name": "Server\nmanagement",
+                  "name": "Server management",
                   "value": 1100
                 }
               ]
             },
             {
               "name": "Charlie Davis",
-              "title": "Full Stack\nDeveloper",
+              "title": "Full Stack Developer",
               "value": 3500,
               "children": [
                 {
-                  "name": "Feature\nimplementation",
+                  "name": "Feature implementation",
                   "value": 1200
                 },
                 {
@@ -59,7 +59,7 @@
                   "value": 1000
                 },
                 {
-                  "name": "Technical\ndocumentation",
+                  "name": "Technical documentation",
                   "value": 1300
                 }
               ]
@@ -78,7 +78,7 @@
                   "value": 1100
                 },
                 {
-                  "name": "Design system\nmaintenance",
+                  "name": "Design system maintenance",
                   "value": 1200
                 }
               ]
@@ -94,15 +94,15 @@
               "value": 3500,
               "children": [
                 {
-                  "name": "iOS app\ndevelopment",
+                  "name": "iOS app development",
                   "value": 1500
                 },
                 {
-                  "name": "Swift\noptimization",
+                  "name": "Swift optimization",
                   "value": 1000
                 },
                 {
-                  "name": "App Store\ndeployment",
+                  "name": "App Store deployment",
                   "value": 1000
                 }
               ]
@@ -113,30 +113,30 @@
               "value": 3500,
               "children": [
                 {
-                  "name": "Android app\ndevelopment",
+                  "name": "Android app development",
                   "value": 1500
                 },
                 {
-                  "name": "Kotlin\noptimization",
+                  "name": "Kotlin optimization",
                   "value": 1000
                 },
                 {
-                  "name": "Play Store\ndeployment",
+                  "name": "Play Store deployment",
                   "value": 1000
                 }
               ]
             },
             {
               "name": "Grace Kim",
-              "title": "Mobile QA\nEngineer",
+              "title": "Mobile QA Engineer",
               "value": 3500,
               "children": [
                 {
-                  "name": "Test case\ndevelopment",
+                  "name": "Test case development",
                   "value": 1200
                 },
                 {
-                  "name": "Automated\ntesting",
+                  "name": "Automated testing",
                   "value": 1300
                 },
                 {
@@ -147,19 +147,19 @@
             },
             {
               "name": "Henry Wilson",
-              "title": "Cross-Platform Team\nDeveloper",
+              "title": "Cross-Platform Team Developer",
               "value": 3500,
               "children": [
                 {
-                  "name": "React Native\ndevelopment",
+                  "name": "React Native development",
                   "value": 1500
                 },
                 {
-                  "name": "Performance\noptimization",
+                  "name": "Performance optimization",
                   "value": 1000
                 },
                 {
-                  "name": "Cross-Platform Team\nintegration",
+                  "name": "Cross-Platform Team integration",
                   "value": 1000
                 }
               ]
@@ -175,34 +175,34 @@
               "value": 3500,
               "children": [
                 {
-                  "name": "CI/CD pipeline\nmanagement",
+                  "name": "CI/CD pipeline management",
                   "value": 1200
                 },
                 {
-                  "name": "Infrastructure\nas code",
+                  "name": "Infrastructure as code",
                   "value": 1300
                 },
                 {
-                  "name": "Monitoring and\nlogging",
+                  "name": "Monitoring and logging",
                   "value": 1000
                 }
               ]
             },
             {
               "name": "Jack Brown",
-              "title": "Site Reliability\nEngineer",
+              "title": "Site Reliability Engineer",
               "value": 3500,
               "children": [
                 {
-                  "name": "System\nscalability",
+                  "name": "System scalability",
                   "value": 1200
                 },
                 {
-                  "name": "Incident\nresponse",
+                  "name": "Incident response",
                   "value": 1100
                 },
                 {
-                  "name": "Performance\ntuning",
+                  "name": "Performance tuning",
                   "value": 1200
                 }
               ]
@@ -227,11 +227,11 @@
                   "value": 1200
                 },
                 {
-                  "name": "Usability\ntesting",
+                  "name": "Usability testing",
                   "value": 1300
                 },
                 {
-                  "name": "Research\nanalysis",
+                  "name": "Research analysis",
                   "value": 1000
                 }
               ]
@@ -250,18 +250,18 @@
                   "value": 1000
                 },
                 {
-                  "name": "Design system\nmaintenance",
+                  "name": "Design system maintenance",
                   "value": 1000
                 }
               ]
             },
             {
               "name": "Mia Robinson",
-              "title": "Interaction\nDesigner",
+              "title": "Interaction Designer",
               "value": 3500,
               "children": [
                 {
-                  "name": "User flow\ndesign",
+                  "name": "User flow design",
                   "value": 1200
                 },
                 {
@@ -269,7 +269,7 @@
                   "value": 1100
                 },
                 {
-                  "name": "Interaction\nprototypes",
+                  "name": "Interaction prototypes",
                   "value": 1200
                 }
               ]
@@ -281,7 +281,7 @@
           "children": [
             {
               "name": "Nathan Scott",
-              "title": "Senior Product\nManager",
+              "title": "Senior Product Manager",
               "value": 3500,
               "children": [
                 {
@@ -289,11 +289,11 @@
                   "value": 1200
                 },
                 {
-                  "name": "Feature\nprioritization",
+                  "name": "Feature prioritization",
                   "value": 1300
                 },
                 {
-                  "name": "Stakeholder\nmanagement",
+                  "name": "Stakeholder management",
                   "value": 1000
                 }
               ]
@@ -304,7 +304,7 @@
               "value": 3500,
               "children": [
                 {
-                  "name": "Backlog\nmanagement",
+                  "name": "Backlog management",
                   "value": 1200
                 },
                 {
@@ -312,7 +312,7 @@
                   "value": 1100
                 },
                 {
-                  "name": "User story\nwriting",
+                  "name": "User story writing",
                   "value": 1200
                 }
               ]
@@ -333,15 +333,15 @@
               "value": 3500,
               "children": [
                 {
-                  "name": "Operations\nmanagement",
+                  "name": "Operations management",
                   "value": 1200
                 },
                 {
-                  "name": "Resource\nallocation",
+                  "name": "Resource allocation",
                   "value": 1300
                 },
                 {
-                  "name": "Process\nimprovement",
+                  "name": "Process improvement",
                   "value": 1000
                 }
               ]
@@ -352,11 +352,11 @@
               "value": 3500,
               "children": [
                 {
-                  "name": "Strategic\nplanning",
+                  "name": "Strategic planning",
                   "value": 1200
                 },
                 {
-                  "name": "Investor\nrelations",
+                  "name": "Investor relations",
                   "value": 1100
                 },
                 {
@@ -375,11 +375,11 @@
                   "value": 1200
                 },
                 {
-                  "name": "Innovation\nmanagement",
+                  "name": "Innovation management",
                   "value": 1300
                 },
                 {
-                  "name": "Technical\nleadership",
+                  "name": "Technical leadership",
                   "value": 1000
                 }
               ]
@@ -396,19 +396,19 @@
           "children": [
             {
               "name": "Paul Thompson",
-              "title": "Enterprise Account\nExec Teamutive",
+              "title": "Enterprise Account Exec Teamutive",
               "value": 3500,
               "children": [
                 {
-                  "name": "Client\nacquisition",
+                  "name": "Client acquisition",
                   "value": 1200
                 },
                 {
-                  "name": "Contract\nnegotiation",
+                  "name": "Contract negotiation",
                   "value": 1300
                 },
                 {
-                  "name": "Relationship\nmanagement",
+                  "name": "Relationship management",
                   "value": 1000
                 }
               ]
@@ -419,7 +419,7 @@
               "value": 3500,
               "children": [
                 {
-                  "name": "Technical\nconsulting",
+                  "name": "Technical consulting",
                   "value": 1200
                 },
                 {
@@ -427,7 +427,7 @@
                   "value": 1300
                 },
                 {
-                  "name": "Proof of concept\ndevelopment",
+                  "name": "Proof of concept development",
                   "value": 1000
                 }
               ]
@@ -446,7 +446,7 @@
                   "value": 1100
                 },
                 {
-                  "name": "Product\ncustomization",
+                  "name": "Product customization",
                   "value": 1200
                 }
               ]
@@ -458,7 +458,7 @@
           "children": [
             {
               "name": "Samuel Lee",
-              "title": "SMB Sales Team\nRepresentative",
+              "title": "SMB Sales Team Representative",
               "value": 3500,
               "children": [
                 {
@@ -466,7 +466,7 @@
                   "value": 1200
                 },
                 {
-                  "name": "Sales pipeline\nmanagement",
+                  "name": "Sales pipeline management",
                   "value": 1300
                 },
                 {
@@ -477,19 +477,19 @@
             },
             {
               "name": "Tina Foster",
-              "title": "Inside Sales\nSpecialist",
+              "title": "Inside Sales Specialist",
               "value": 3500,
               "children": [
                 {
-                  "name": "Inbound lead\nqualification",
+                  "name": "Inbound lead qualification",
                   "value": 1200
                 },
                 {
-                  "name": "Outbound\nprospecting",
+                  "name": "Outbound prospecting",
                   "value": 1100
                 },
                 {
-                  "name": "Sales process\noptimization",
+                  "name": "Sales process optimization",
                   "value": 1200
                 }
               ]
