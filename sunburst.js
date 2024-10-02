@@ -4,23 +4,23 @@ function _chart(d3, data) {
   const height = width;
   const radius = width / 12;
 
-// Create the color scale
-const Colors = [
-  "#FF9AA2", // Rich coral
-  "#A8D8B9", // Rich sage
-  "#8AC6D1", // Rich sky blue
-  "#FFDAC1", // Rich peach
-  "#E2F0CB", // Rich lime
-  "#B5EAD7", // Rich mint
-  "#C7CEEA", // Rich periwinkle
-  "#F6D5E5", // Rich rose
-  "#FFE5B4", // Rich cream
-  "#D4A5A5"  // Rich mauve
-];
+  // Create the color scale with richer colors
+  const richerColors = [
+    "#FF9AA2", // Rich coral
+    "#A8D8B9", // Rich sage
+    "#8AC6D1", // Rich sky blue
+    "#FFDAC1", // Rich peach
+    "#E2F0CB", // Rich lime
+    "#B5EAD7", // Rich mint
+    "#C7CEEA", // Rich periwinkle
+    "#F6D5E5", // Rich rose
+    "#FFE5B4", // Rich cream
+    "#D4A5A5"  // Rich mauve
+  ];
 
   const color = d3.scaleOrdinal()
     .domain(data.children.map(d => d.name))
-    .range(Colors);
+    .range(richerColors);
 
   // Compute the layout.
   const hierarchy = d3
@@ -74,40 +74,9 @@ const Colors = [
     .style("cursor", "pointer")
     .on("click", clicked);
 
-const format = d3.format(",d");
-  path.append("title").text(
-    (d) =>
-      `${d
-        .ancestors()
-       .map((d) => d.data.name)
-      .reverse()
-        .join("/")}\n${format(d.value)}`
-  );
-
-  // Function to calculate font size
-  function calculateFontSize(d) {
-    const node = d.current;
-    const angle = node.x1 - node.x0;
-    const radius = (node.y0 + node.y1) / 2;
-    const circumference = angle * radius;
-    const maxFontSize = Math.min(14, circumference / 4);
-    const minFontSize = 8;
-    return Math.max(minFontSize, maxFontSize);
-  }
-
-  const label = svg
-    .append("g")
-    .attr("pointer-events", "none")
-    .attr("text-anchor", "middle")
-    .style("user-select", "none")
-    .selectAll("text")
-    .data(root.descendants().slice(1))
-    .join("text")
-    .attr("dy", "0.35em")
-    .attr("fill-opacity", (d) => +labelVisible(d.current))
-    .attr("transform", (d) => labelTransform(d.current))
-    .style("font-size", (d) => `${calculateFontSize(d)}px`)
-    .text((d) => d.data.name);
+  // Update the hover text to only show the current layer text
+  path.append("title")
+    .text(d => d.data.name);
 
   const parent = svg
     .append("circle")
@@ -116,39 +85,6 @@ const format = d3.format(",d");
     .attr("fill", "none")
     .attr("pointer-events", "all")
     .on("click", clicked);
-
-  // Add tooltip to the center circle
-  const tooltipG = svg.append("g")
-    .attr("pointer-events", "all")
-    .style("cursor", "pointer")
-    .on("click", () => clicked(null, parent.datum()));
-
-  const tooltipRect = tooltipG.append("rect")
-    .attr("x", -40)
-    .attr("y", -10)
-    .attr("width", 80)
-    .attr("height", 20)
-    .attr("fill", "#f6f6f6")
-    .attr("rx", 5)
-    .attr("ry", 5)
-    .attr("fill-opacity", 0);f
-
-  const tooltipText = tooltipG.append("text")
-    .attr("text-anchor", "middle")
-    .attr("dy", "0.35em")
-    .attr("font-size", "7px")
-    .attr("fill-opacity", 0)
-    .text("Go to previous layer");
-
-  parent
-    .on("mouseover", () => {
-      tooltipRect.attr("fill-opacity", 0.5);
-      tooltipText.attr("fill-opacity", 0.5);
-    })
-    .on("mouseout", () => {
-      tooltipRect.attr("fill-opacity", 0);
-      tooltipText.attr("fill-opacity", 0);
-    });
 
   // Handle zoom on click.
   function clicked(event, p) {
@@ -172,9 +108,6 @@ const format = d3.format(",d");
 
     const t = svg.transition().duration(750);
 
-    // Transition the data on all arcs, even the ones that aren't visible,
-    // so that if this transition is interrupted, entering arcs will start
-    // the next transition from the desired position.
     path
       .transition(t)
       .tween("data", (d) => {
@@ -189,37 +122,10 @@ const format = d3.format(",d");
       )
       .attr("pointer-events", (d) => (arcVisible(d.target) ? "auto" : "none"))
       .attrTween("d", (d) => () => arc(d.current));
-
-    label
-      .filter(function (d) {
-        return +this.getAttribute("fill-opacity") || labelVisible(d.target);
-      })
-      .transition(t)
-      .attr("fill-opacity", (d) => +labelVisible(d.target))
-      .attrTween("transform", (d) => () => labelTransform(d.current))
-      .tween("text", function(d) {
-        const i = d3.interpolate(d.current, d.target);
-        return function(t) {
-          d.current = i(t);
-          d3.select(this)
-            .style("font-size", `${calculateFontSize(d)}px`)
-            .attr("transform", labelTransform(d.current));
-        };
-      });
   }
 
   function arcVisible(d) {
     return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
-  }
-
-  function labelVisible(d) {
-    return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;;
-  }
-
-  function labelTransform(d) {
-    const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-    const y = ((d.y0 + d.y1) / 2) * radius;
-    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
   }
 
   return svg.node();
