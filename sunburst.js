@@ -142,8 +142,8 @@ const Colors = [
 
   parent
     .on("mouseover", () => {
-      tooltipRect.attr("fill-opacity", 0.9);
-      tooltipText.attr("fill-opacity", 1);
+      tooltipRect.attr("fill-opacity", 0.5);
+      tooltipText.attr("fill-opacity", 0.5);
     })
     .on("mouseout", () => {
       tooltipRect.attr("fill-opacity", 0);
@@ -223,20 +223,4 @@ const Colors = [
   }
 
   return svg.node();
-}
-
-function _data(FileAttachment) {
-  return FileAttachment("data.json").json();
-}
-
-export default function define(runtime, observer) {
-  const main = runtime.module();
-  function toString() { return this.url; }
-  const fileAttachments = new Map([
-    ["data.json", {url: new URL("./data/data.json", import.meta.url), mimeType: "application/json", toString}]
-  ]);
-  main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
-  main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
-  main.variable(observer("data")).define("data", ["FileAttachment"], _data);
-  return main;
 }
