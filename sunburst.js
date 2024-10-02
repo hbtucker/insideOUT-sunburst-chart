@@ -115,7 +115,7 @@ function _chart(d3, data) {
     .attr("y", -10)
     .attr("width", 80)
     .attr("height", 20)
-    .attr("fill", "#f0f0f0")
+    .attr("fill", "#f6f6f6")
     .attr("rx", 5)
     .attr("ry", 5)
     .attr("fill-opacity", 0);
