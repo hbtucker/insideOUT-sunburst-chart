@@ -74,15 +74,16 @@ const Colors = [
     .style("cursor", "pointer")
     .on("click", clicked);
 
-  const format = d3.format(",d");
-  path.append("title").text(
-    (d) =>
-      `${d
-        .ancestors()
-        .map((d) => d.data.name)
-        .reverse()
-        .join("/")}\n${format(d.value)}`
-  );
+//Commenting out hover over label as it's not relevant for now
+//  const format = d3.format(",d");
+//  path.append("title").text(
+//    (d) =>
+//      `${d
+//        .ancestors()
+//       .map((d) => d.data.name)
+//      .reverse()
+//        .join("/")}\n${format(d.value)}`
+//  );
 
   // Function to calculate font size
   function calculateFontSize(d) {
@@ -131,7 +132,7 @@ const Colors = [
     .attr("fill", "#f6f6f6")
     .attr("rx", 5)
     .attr("ry", 5)
-    .attr("fill-opacity", 0);
+    .attr("fill-opacity", 0);f
 
   const tooltipText = tooltipG.append("text")
     .attr("text-anchor", "middle")
@@ -213,7 +214,7 @@ const Colors = [
   }
 
   function labelVisible(d) {
-    return false;
+    return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;;
   }
 
   function labelTransform(d) {
