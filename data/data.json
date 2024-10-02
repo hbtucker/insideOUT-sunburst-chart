@@ -147,7 +147,7 @@
             },
             {
               "name": "Henry Wilson",
-              "title": "Cross-Platform\nDeveloper",
+              "title": "Cross-Platform Team Team\nDeveloper",
               "value": 3500,
               "children": [
                 {
@@ -159,7 +159,7 @@
                   "value": 1000
                 },
                 {
-                  "name": "Cross-platform\nintegration",
+                  "name": "Cross-Platform Team Team\nintegration",
                   "value": 1000
                 }
               ]
@@ -167,11 +167,11 @@
           ]
         },
         {
-          "name": "Platform",
+          "name": "Platform Team Team",
           "children": [
             {
               "name": "Irene Taylor",
-              "title": "Platform Engineer",
+              "title": "Platform Team Team Engineer",
               "value": 3500,
               "children": [
                 {
