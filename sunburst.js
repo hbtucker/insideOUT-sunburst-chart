@@ -4,23 +4,23 @@ function _chart(d3, data) {
   const height = width;
   const radius = width / 12;
 
-// Create the color scale with muted colors
-const pastelColors = [
-  "#FFB3BA", // Pastel pink
-  "#BAFFC9", // Pastel green
-  "#BAE1FF", // Pastel blue
-  "#FFFFBA", // Pastel yellow
-  "#FFDFBA", // Pastel orange
-  "#E0BBE4", // Pastel purple
-  "#D4F0F0", // Pastel turquoise
-  "#FFC6FF", // Pastel magenta
-  "#DCEDC1", // Pastel lime
-  "#FFD1DC"  // Pastel rose
+// Create the color scale
+const Colors = [
+  "#FF9AA2", // Rich coral
+  "#A8D8B9", // Rich sage
+  "#8AC6D1", // Rich sky blue
+  "#FFDAC1", // Rich peach
+  "#E2F0CB", // Rich lime
+  "#B5EAD7", // Rich mint
+  "#C7CEEA", // Rich periwinkle
+  "#F6D5E5", // Rich rose
+  "#FFE5B4", // Rich cream
+  "#D4A5A5"  // Rich mauve
 ];
 
   const color = d3.scaleOrdinal()
     .domain(data.children.map(d => d.name))
-    .range(pastelColors);
+    .range(Colors);
 
   // Compute the layout.
   const hierarchy = d3
