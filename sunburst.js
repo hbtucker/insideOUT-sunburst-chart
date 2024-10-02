@@ -74,15 +74,15 @@ function _chart(d3, data) {
     .style("cursor", "pointer")
     .on("click", clicked);
 
-  const format = d3.format(",d");
-  path.append("title").text(
-    (d) =>
-      `${d
-        .ancestors()
-        .map((d) => d.data.name)
-        .reverse()
-        .join("/")}\n${format(d.value)}`
-  );
+//  const format = d3.format(",d");
+//  path.append("title").text(
+//    (d) =>
+//      `${d
+//       .ancestors()
+//        .map((d) => d.data.name)
+//        .reverse()
+//        .join("/")}\n${format(d.value)}`
+//  );
 
   // Function to calculate font size
   function calculateFontSize(d) {
@@ -164,7 +164,7 @@ function _chart(d3, data) {
     .attr("dy", "0.35em")
     .attr("font-size", "7px")
     .attr("fill-opacity", 0)
-    .text("Click to go back");
+    .text("Go to previous layer");
 
   parent
     .on("mouseover", () => {
