@@ -5,18 +5,18 @@ function _chart(d3, data) {
   const radius = width / 12;
 
 // Create the color scale with muted colors
-  const mutedColors = [
-    "#8C9DAF", // Muted blue-gray
-    "#B2A59F", // Muted taupe
-    "#A7B39A", // Muted sage green
-    "#C6A9A3", // Muted dusty rose
-    "#D0B49F", // Muted sand
-    "#A39BA8", // Muted lavender
-    "#B0C4B1", // Muted mint
-    "#CFB997", // Muted mustard
-    "#9F9FAD", // Muted periwinkle
-    "#B5B8AA"  // Muted olive
-  ];
+const pastelColors = [
+  "#FFB3BA", // Pastel pink
+  "#BAFFC9", // Pastel green
+  "#BAE1FF", // Pastel blue
+  "#FFFFBA", // Pastel yellow
+  "#FFDFBA", // Pastel orange
+  "#E0BBE4", // Pastel purple
+  "#D4F0F0", // Pastel turquoise
+  "#FFC6FF", // Pastel magenta
+  "#DCEDC1", // Pastel lime
+  "#FFD1DC"  // Pastel rose
+];
 
   const color = d3.scaleOrdinal()
     .domain(data.children.map(d => d.name))
