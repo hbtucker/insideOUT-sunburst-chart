@@ -74,24 +74,15 @@ const Colors = [
     .style("cursor", "pointer")
     .on("click", clicked);
 
-  const parent = svg
-    .append("circle")
-    .datum(root)
-    .attr("r", radius)
-    .attr("fill", "none")
-    .attr("pointer-events", "all")
-    .on("click", clicked);
-
-//Commenting out hover over label as it's not relevant for now
-//  const format = d3.format(",d");
-//  path.append("title").text(
-//    (d) =>
-//      `${d
-//        .ancestors()
-//       .map((d) => d.data.name)
-//      .reverse()
-//        .join("/")}\n${format(d.value)}`
-//  );
+const format = d3.format(",d");
+  path.append("title").text(
+    (d) =>
+      `${d
+        .ancestors()
+       .map((d) => d.data.name)
+      .reverse()
+        .join("/")}\n${format(d.value)}`
+  );
 
   // Function to calculate font size
   function calculateFontSize(d) {
