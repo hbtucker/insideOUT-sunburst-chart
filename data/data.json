@@ -5,7 +5,7 @@
       "name": "Engineering",
       "children": [
         {
-          "name": "Web Development",
+          "name": "Web Team",
           "children": [
             {
               "name": "Alice Johnson",
@@ -86,7 +86,7 @@
           ]
         },
         {
-          "name": "Mobile Development",
+          "name": "App Team",
           "children": [
             {
               "name": "Eva Martinez",
