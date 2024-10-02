@@ -4,10 +4,23 @@ function _chart(d3, data) {
   const height = width;
   const radius = width / 12;
 
-  // Create the color scale.
-  const color = d3.scaleOrdinal(
-    d3.quantize(d3.interpolateRainbow, data.children.length + 1)
-  );
+// Create the color scale with muted colors
+  const mutedColors = [
+    "#8C9DAF", // Muted blue-gray
+    "#B2A59F", // Muted taupe
+    "#A7B39A", // Muted sage green
+    "#C6A9A3", // Muted dusty rose
+    "#D0B49F", // Muted sand
+    "#A39BA8", // Muted lavender
+    "#B0C4B1", // Muted mint
+    "#CFB997", // Muted mustard
+    "#9F9FAD", // Muted periwinkle
+    "#B5B8AA"  // Muted olive
+  ];
+
+  const color = d3.scaleOrdinal()
+    .domain(data.children.map(d => d.name))
+    .range(mutedColors);
 
   // Compute the layout.
   const hierarchy = d3
