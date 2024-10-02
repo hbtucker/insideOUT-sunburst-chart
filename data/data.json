@@ -312,7 +312,7 @@
                   "value": 1100
                 },
                 {
-                  "name": "User story writing",
+                  "name": "Feature Documentation",
                   "value": 1200
                 }
               ]
@@ -396,7 +396,7 @@
           "children": [
             {
               "name": "Paul Thompson",
-              "title": "Enterprise Account Exec Teamutive",
+              "title": "Enterprise Account Executive",
               "value": 3500,
               "children": [
                 {
