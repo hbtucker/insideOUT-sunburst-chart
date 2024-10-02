@@ -74,9 +74,66 @@ function _chart(d3, data) {
     .style("cursor", "pointer")
     .on("click", clicked);
 
-  // Update the hover text to only show the current layer text
-  path.append("title")
-    .text(d => d.data.name);
+  const format = d3.format(",d");
+  path.append("title").text(
+    (d) =>
+      `${d
+        .ancestors()
+        .map((d) => d.data.name)
+        .reverse()
+        .join("/")}\n${format(d.value)}`
+  );
+
+  // Function to calculate font size
+  function calculateFontSize(d) {
+    const node = d.current;
+    const angle = node.x1 - node.x0;
+    const radius = (node.y0 + node.y1) / 2;
+    const circumference = angle * radius;
+    const maxFontSize = Math.min(14, circumference / 4);
+    const minFontSize = 8;
+    return Math.max(minFontSize, maxFontSize);
+  }
+
+  // Function to insert line breaks
+  function insertLineBreaks(text) {
+    const words = text.split(/\s+/);
+    let lines = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+      if (currentLine.length + words[i].length + 1 <= 10) {
+        currentLine += " " + words[i];
+      } else {
+        lines.push(currentLine);
+        currentLine = words[i];
+      }
+    }
+    lines.push(currentLine);
+    return lines;
+  }
+
+  const label = svg
+    .append("g")
+    .attr("pointer-events", "none")
+    .attr("text-anchor", "middle")
+    .style("user-select", "none")
+    .selectAll("text")
+    .data(root.descendants().slice(1))
+    .join("text")
+    .attr("dy", "0.35em")
+    .attr("fill-opacity", (d) => +labelVisible(d.current))
+    .attr("transform", (d) => labelTransform(d.current))
+    .style("font-size", (d) => `${calculateFontSize(d)}px`)
+    .each(function(d) {
+      const lines = insertLineBreaks(d.data.name);
+      d3.select(this).selectAll("tspan")
+        .data(lines)
+        .join("tspan")
+        .attr("x", 0)
+        .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
+        .text(d => d);
+    });
 
   const parent = svg
     .append("circle")
@@ -85,6 +142,39 @@ function _chart(d3, data) {
     .attr("fill", "none")
     .attr("pointer-events", "all")
     .on("click", clicked);
+
+  // Add tooltip to the center circle
+  const tooltipG = svg.append("g")
+    .attr("pointer-events", "all")
+    .style("cursor", "pointer")
+    .on("click", () => clicked(null, parent.datum()));
+
+  const tooltipRect = tooltipG.append("rect")
+    .attr("x", -40)
+    .attr("y", -10)
+    .attr("width", 80)
+    .attr("height", 20)
+    .attr("fill", "#f6f6f6")
+    .attr("rx", 5)
+    .attr("ry", 5)
+    .attr("fill-opacity", 0);
+
+  const tooltipText = tooltipG.append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", "0.35em")
+    .attr("font-size", "7px")
+    .attr("fill-opacity", 0)
+    .text("Click to go back");
+
+  parent
+    .on("mouseover", () => {
+      tooltipRect.attr("fill-opacity", 0.5);
+      tooltipText.attr("fill-opacity", 0.5);
+    })
+    .on("mouseout", () => {
+      tooltipRect.attr("fill-opacity", 0);
+      tooltipText.attr("fill-opacity", 0);
+    });
 
   // Handle zoom on click.
   function clicked(event, p) {
@@ -108,6 +198,9 @@ function _chart(d3, data) {
 
     const t = svg.transition().duration(750);
 
+    // Transition the data on all arcs, even the ones that aren't visible,
+    // so that if this transition is interrupted, entering arcs will start
+    // the next transition from the desired position.
     path
       .transition(t)
       .tween("data", (d) => {
@@ -122,10 +215,46 @@ function _chart(d3, data) {
       )
       .attr("pointer-events", (d) => (arcVisible(d.target) ? "auto" : "none"))
       .attrTween("d", (d) => () => arc(d.current));
+
+    label
+      .filter(function (d) {
+        return +this.getAttribute("fill-opacity") || labelVisible(d.target);
+      })
+      .transition(t)
+      .attr("fill-opacity", (d) => +labelVisible(d.target))
+      .attrTween("transform", (d) => () => labelTransform(d.current))
+      .tween("text", function(d) {
+        const i = d3.interpolate(d.current, d.target);
+        return function(t) {
+          d.current = i(t);
+          const fontSize = calculateFontSize(d);
+          d3.select(this)
+            .style("font-size", `${fontSize}px`)
+            .attr("transform", labelTransform(d.current));
+          
+          const lines = insertLineBreaks(d.data.name);
+          d3.select(this).selectAll("tspan")
+            .data(lines)
+            .join("tspan")
+            .attr("x", 0)
+            .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
+            .text(d => d);
+        };
+      });
   }
 
   function arcVisible(d) {
     return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
+  }
+
+  function labelVisible(d) {
+    return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+  }
+
+  function labelTransform(d) {
+    const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
+    const y = ((d.y0 + d.y1) / 2) * radius;
+    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
   }
 
   return svg.node();
