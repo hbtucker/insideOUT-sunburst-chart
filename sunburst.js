@@ -20,7 +20,7 @@ const pastelColors = [
 
   const color = d3.scaleOrdinal()
     .domain(data.children.map(d => d.name))
-    .range(mutedColors);
+    .range(pastelColors);
 
   // Compute the layout.
   const hierarchy = d3
