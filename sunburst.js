@@ -1,6 +1,4 @@
-import * as d3 from "d3";
-
-export function createChart(data) {
+function _chart(d3, data) {
   // Specify the chart's dimensions.
   const width = 928;
   const height = width;
@@ -226,5 +224,19 @@ const Colors = [
 
   return svg.node();
 }
-// Add a default export
-export default createChart;
+
+function _data(FileAttachment) {
+  return FileAttachment("data.json").json();
+}
+
+export default function define(runtime, observer) {
+  const main = runtime.module();
+  function toString() { return this.url; }
+  const fileAttachments = new Map([
+    ["data.json", {url: new URL("./data/data.json", import.meta.url), mimeType: "application/json", toString}]
+  ]);
+  main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
+  main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
+  main.variable(observer("data")).define("data", ["FileAttachment"], _data);
+  return main;
+}
