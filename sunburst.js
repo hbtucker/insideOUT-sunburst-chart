@@ -23,57 +23,44 @@ function _chart(d3, data) {
     .range(richerColors);
 
   // Compute the layout.
-  const hierarchy = d3
-    .hierarchy(data)
-    .sum((d) => d.value)
-    .sort((a, b) => b.value - a.value);
-  const root = d3.partition().size([2 * Math.PI, hierarchy.height + 1])(
-    hierarchy
-  );
-  root.each((d) => (d.current = d));
+  const partition = data => d3.partition()
+    .size([2 * Math.PI, radius * radius])
+    (d3.hierarchy(data)
+      .sum(d => d.value)
+      .sort((a, b) => b.value - a.value));
+
+  const root = partition(data);
 
   // Create the arc generator.
-  const arc = d3
-    .arc()
-    .startAngle((d) => d.x0)
-    .endAngle((d) => d.x1)
-    .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.005))
+  const arc = d3.arc()
+    .startAngle(d => d.x0)
+    .endAngle(d => d.x1)
+    .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
     .padRadius(radius * 1.5)
-    .innerRadius((d) => d.y0 * radius)
-    .outerRadius((d) => Math.max(d.y0 * radius, d.y1 * radius - 1));
+    .innerRadius(d => Math.sqrt(d.y0))
+    .outerRadius(d => Math.sqrt(d.y1));
 
   // Create the SVG container.
-  const svg = d3
-    .create("svg")
+  const svg = d3.create("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, width])
     .style("font-family", "'Poppins', sans-serif")
-    .attr(
-      "style",
-      `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
-    );
+    .attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`);
 
   // Create a group for the paths and labels
   const g = svg.append("g");
 
   // Append the arcs.
-  const path = g
-    .append("g")
+  const path = g.append("g")
     .selectAll("path")
     .data(root.descendants().slice(1))
     .join("path")
-    .attr("fill", (d) => {
-      while (d.depth > 1) d = d.parent;
-      return color(d.data.name);
-    })
-    .attr("fill-opacity", (d) =>
-      arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0
-    )
-    .attr("pointer-events", (d) => (arcVisible(d.current) ? "auto" : "none"))
-    .attr("d", (d) => arc(d.current));
+    .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
+    .attr("fill-opacity", d => arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0)
+    .attr("pointer-events", d => arcVisible(d) ? "auto" : "none")
+    .attr("d", arc);
 
   // Make them clickable if they have children and add hover animation.
-  path
-    .filter((d) => d.children)
+  path.filter(d => d.children)
     .style("cursor", "pointer")
     .on("click", clicked)
     .on("mouseover", function() {
@@ -86,14 +73,13 @@ function _chart(d3, data) {
       d3.select(this)
         .transition()
         .duration(200)
-        .attr("fill-opacity", arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0);
+        .attr("fill-opacity", arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0);
     });
 
   // Function to calculate font size
   function calculateFontSize(d) {
-    const node = d.current;
-    const angle = node.x1 - node.x0;
-    const radius = (node.y0 + node.y1) / 2;
+    const angle = d.x1 - d.x0;
+    const radius = Math.sqrt((d.y0 + d.y1) / 2);
     const circumference = angle * radius;
     const maxFontSize = Math.min(14, circumference / 4);
     const minFontSize = 8;
@@ -118,8 +104,8 @@ function _chart(d3, data) {
     return lines;
   }
 
-  const label = g
-    .append("g")
+  // Append the labels
+  const label = g.append("g")
     .attr("pointer-events", "none")
     .attr("text-anchor", "middle")
     .style("user-select", "none")
@@ -127,9 +113,9 @@ function _chart(d3, data) {
     .data(root.descendants().slice(1))
     .join("text")
     .attr("dy", "0.35em")
-    .attr("fill-opacity", (d) => +labelVisible(d.current))
-    .attr("transform", (d) => labelTransform(d.current))
-    .style("font-size", (d) => `${calculateFontSize(d)}px`)
+    .attr("fill-opacity", d => +labelVisible(d))
+    .attr("transform", d => labelTransform(d))
+    .style("font-size", d => `${calculateFontSize(d)}px`)
     .each(function(d) {
       const lines = insertLineBreaks(d.data.name);
       d3.select(this).selectAll("tspan")
@@ -140,8 +126,7 @@ function _chart(d3, data) {
         .text(d => d);
     });
 
-  const parent = svg
-    .append("circle")
+  const parent = svg.append("circle")
     .datum(root)
     .attr("r", radius)
     .attr("fill", "none")
@@ -152,7 +137,7 @@ function _chart(d3, data) {
   const tooltipG = svg.append("g")
     .attr("pointer-events", "all")
     .style("cursor", "pointer")
-    .on("click", () => clicked(null, parent.datum()));
+    .on("click", () => clicked(null, root));
 
   const tooltipRect = tooltipG.append("rect")
     .attr("x", -40)
@@ -183,29 +168,19 @@ function _chart(d3, data) {
 
   // Handle zoom on click.
   function clicked(event, p) {
+    if (!p) p = root;
     parent.datum(p.parent || root);
 
-    root.each(
-      (d) =>
-        (d.target = {
-          x0:
-            Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) *
-            2 *
-            Math.PI,
-          x1:
-            Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) *
-            2 *
-            Math.PI,
-          y0: Math.max(0, d.y0 - p.depth),
-          y1: Math.max(0, d.y1 - p.depth)
-        })
-    );
+    root.each(d => d.target = {
+      x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+      x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+      y0: Math.max(0, d.y0 - p.depth),
+      y1: Math.max(0, d.y1 - p.depth)
+    });
 
     const t = svg.transition().duration(750);
 
-    // Update the data for visible arcs
-    path.data(root.descendants().slice(1))
-      .transition(t)
+    path.transition(t)
       .tween("data", d => {
         const i = d3.interpolate(d.current, d.target);
         return t => d.current = i(t);
@@ -217,16 +192,14 @@ function _chart(d3, data) {
       .attr("pointer-events", d => arcVisible(d.target) ? "auto" : "none")
       .attrTween("d", d => () => arc(d.current));
 
-    // Update the data for visible labels
-    label.data(root.descendants().slice(1))
-      .transition(t)
+    label.transition(t)
       .attr("fill-opacity", d => +labelVisible(d.target))
       .attrTween("transform", d => () => labelTransform(d.current))
       .tween("text", function(d) {
         const i = d3.interpolate(d.current, d.target);
         return function(t) {
           d.current = i(t);
-          const fontSize = calculateFontSize(d);
+          const fontSize = calculateFontSize(d.current);
           d3.select(this)
             .style("font-size", `${fontSize}px`)
             .attr("transform", labelTransform(d.current));
@@ -256,10 +229,8 @@ function _chart(d3, data) {
 
   function labelTransform(d) {
     const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
-    const y = (d.y0 + d.y1) / 2 * radius;
-    const rotation = x - 90;
-    const translate = y;
-    return `rotate(${rotation}) translate(${translate},0) rotate(${rotation > 90 ? 180 : 0})`;
+    const y = (Math.sqrt(d.y0) + Math.sqrt(d.y1)) / 2;
+    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
   }
 
   return svg.node();
