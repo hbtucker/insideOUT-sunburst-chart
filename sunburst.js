@@ -6,16 +6,8 @@ function _chart(d3, data) {
 
   // Create the color scale with richer colors
   const richerColors = [
-    "#FF9AA2", // Rich coral
-    "#A8D8B9", // Rich sage
-    "#8AC6D1", // Rich sky blue
-    "#FFDAC1", // Rich peach
-    "#E2F0CB", // Rich lime
-    "#B5EAD7", // Rich mint
-    "#C7CEEA", // Rich periwinkle
-    "#F6D5E5", // Rich rose
-    "#FFE5B4", // Rich cream
-    "#D4A5A5"  // Rich mauve
+    "#FF9AA2", "#A8D8B9", "#8AC6D1", "#FFDAC1", "#E2F0CB",
+    "#B5EAD7", "#C7CEEA", "#F6D5E5", "#FFE5B4", "#D4A5A5"
   ];
 
   const color = d3.scaleOrdinal()
@@ -44,7 +36,7 @@ function _chart(d3, data) {
   const svg = d3.create("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, width])
     .style("font-family", "'Poppins', sans-serif")
-    .attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`);
+    .attr("style", "max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer;");
 
   // Create a group for the paths and labels
   const g = svg.append("g");
@@ -56,7 +48,6 @@ function _chart(d3, data) {
     .join("path")
     .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
     .attr("fill-opacity", d => arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0)
-    .attr("pointer-events", d => arcVisible(d) ? "auto" : "none")
     .attr("d", arc);
 
   // Make them clickable if they have children and add hover animation.
@@ -64,16 +55,10 @@ function _chart(d3, data) {
     .style("cursor", "pointer")
     .on("click", clicked)
     .on("mouseover", function() {
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .attr("fill-opacity", 1);
+      d3.select(this).attr("fill-opacity", 1);
     })
     .on("mouseout", function(event, d) {
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .attr("fill-opacity", arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0);
+      d3.select(this).attr("fill-opacity", arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0);
     });
 
   // Function to calculate font size
@@ -180,7 +165,9 @@ function _chart(d3, data) {
 
     const t = svg.transition().duration(750);
 
-    path.transition(t)
+    // Update the data for visible arcs
+    path.data(root.descendants().slice(1))
+      .transition(t)
       .tween("data", d => {
         const i = d3.interpolate(d.current, d.target);
         return t => d.current = i(t);
@@ -189,10 +176,11 @@ function _chart(d3, data) {
         return +this.getAttribute("fill-opacity") || arcVisible(d.target);
       })
       .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
-      .attr("pointer-events", d => arcVisible(d.target) ? "auto" : "none")
       .attrTween("d", d => () => arc(d.current));
 
-    label.transition(t)
+    // Update the data for visible labels
+    label.data(root.descendants().slice(1))
+      .transition(t)
       .attr("fill-opacity", d => +labelVisible(d.target))
       .attrTween("transform", d => () => labelTransform(d.current))
       .tween("text", function(d) {
