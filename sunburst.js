@@ -18,6 +18,18 @@ function _chart(d3, data) {
     "#D4A5A5"  // Rich mauve
   ];
 
+  let darkerColors = [
+     "#8B3A1E",
+     "#A18860",
+     "#A99585",
+     "#517666",
+     "#005D5D",
+     "#5A6D90",
+     "#688092",
+     "#809D95",
+     "#96A39C",
+        ];
+
   const color = d3.scaleOrdinal()
     .domain(data.children.map(d => d.name))
     .range(richerColors);
@@ -258,6 +270,27 @@ function _chart(d3, data) {
          const translate = `translate(${y},0)`;
          return `rotate(${rotation}) ${translate} rotate(${-rotation})`;
         }
+
+          // Dark mode toggle functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const logo = document.getElementById('logo');
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            updateColors();
+        });
+
+        function updateColors() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const textColor = isDarkMode ? 'white' : 'black';
+            
+            if (isDarkMode) {
+                color.range(darkerColors);
+                logo.src = 'dark-logo.png';
+            } else {
+                color.range(richerColors);
+                logo.src = 'logo.png';
+            }
 
   return svg.node();
 }
