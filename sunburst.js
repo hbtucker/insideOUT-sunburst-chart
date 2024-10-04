@@ -18,7 +18,7 @@ function _chart(d3, data) {
     "#D4A5A5"  // Rich mauve
   ];
 
-  let darkerColors = [
+  const darkerColors = [
     "#8B3A1E",
     "#A18860",
     "#A99585",
@@ -30,7 +30,7 @@ function _chart(d3, data) {
     "#96A39C",
   ];
 
-  const color = d3.scaleOrdinal()
+  let color = d3.scaleOrdinal()
     .domain(data.children.map(d => d.name))
     .range(richerColors);
 
