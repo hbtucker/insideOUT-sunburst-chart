@@ -2,7 +2,7 @@ function _chart(d3, data) {
   // Specify the chart's dimensions.
   const width = 928;
   const height = width;
-  const radius = width / 2;
+  const radius = width / 12;
 
   // Create the color scale with richer colors
   const richerColors = [
