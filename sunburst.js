@@ -218,29 +218,11 @@ function _chart(d3, data) {
       })
       .transition(t)
       .attr("fill-opacity", (d) => +labelVisible(d.target))
-      .attrTween("transform", (d) => () => labelTransform(d.current))
-      .tween("text", function(d) {
-        const i = d3.interpolate(d.current, d.target);
-        return function(t) {
-          d.current = i(t);
-          const fontSize = calculateFontSize(d);
-          d3.select(this)
-            .style("font-size", `${fontSize}px`)
-            .attr("transform", labelTransform(d.current));
-          
-          const lines = insertLineBreaks(d.data.name);
-          d3.select(this).selectAll("tspan")
-            .data(lines)
-            .join("tspan")
-            .attr("x", 0)
-            .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
-            .text(d => d);
-        };
-      });
+      .attrTween("transform", (d) => () => labelTransform(d.current));
 
-    // Remove paths and labels that are no longer visible
-    path.filter(d => !arcVisible(d.target)).remove();
-    label.filter(d => !labelVisible(d.target)).remove();
+    // Remove old paths and labels
+    path.exit().remove();
+    label.exit().remove();
   }
 
   function arcVisible(d) {
@@ -254,7 +236,7 @@ function _chart(d3, data) {
   function labelTransform(d) {
     const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
     const y = ((d.y0 + d.y1) / 2) * radius;
-    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+    return `translate(${y},0)`;
   }
 
   return svg.node();
