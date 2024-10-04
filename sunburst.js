@@ -68,21 +68,28 @@ function _chart(d3, data) {
     .attr("pointer-events", (d) => (arcVisible(d.current) ? "auto" : "none"))
     .attr("d", (d) => arc(d.current));
 
-  // Make them clickable if they have children.
+  // Make them clickable if they have children and add hover effect.
   path
     .filter((d) => d.children)
     .style("cursor", "pointer")
-    .on("click", clicked);
-
-//  const format = d3.format(",d");
-//  path.append("title").text(
-//    (d) =>
-//      `${d
-//       .ancestors()
-//        .map((d) => d.data.name)
-//        .reverse()
-//        .join("/")}\n${format(d.value)}`
-//  );
+    .on("click", clicked)
+    .on("mouseover", function(event, d) {
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr("fill-opacity", 1)
+        .attr("transform", (d) => {
+          const [x, y] = arc.centroid(d.current);
+          return `translate(${x * 0.05},${y * 0.05})`;
+        });
+    })
+    .on("mouseout", function(event, d) {
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr("fill-opacity", arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
+        .attr("transform", "translate(0,0)");
+    });
 
   // Function to calculate font size
   function calculateFontSize(d) {
