@@ -2,7 +2,7 @@ function _chart(d3, data) {
   // Specify the chart's dimensions.
   const width = 928;
   const height = width;
-  const radius = width / 12;
+  const radius = width / 2;
 
   // Create the color scale with richer colors
   const richerColors = [
@@ -60,6 +60,35 @@ function _chart(d3, data) {
       .style("cursor", "pointer")
       .on("click", clicked);
 
+  // Function to calculate font size
+  function calculateFontSize(d) {
+    const node = d.current;
+    const angle = node.x1 - node.x0;
+    const radius = (node.y0 + node.y1) / 2;
+    const circumference = angle * radius;
+    const maxFontSize = Math.min(14, circumference / 4);
+    const minFontSize = 9;
+    return Math.max(minFontSize, maxFontSize);
+  }
+
+  // Function to insert line breaks
+  function insertLineBreaks(text) {
+    const words = text.split(/\s+/);
+    let lines = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+      if (currentLine.length + words[i].length + 1 <= 10) {
+        currentLine += " " + words[i];
+      } else {
+        lines.push(currentLine);
+        currentLine = words[i];
+      }
+    }
+    lines.push(currentLine);
+    return lines;
+  }
+
   // Add the labels
   const label = svg.append("g")
       .attr("pointer-events", "none")
@@ -71,7 +100,16 @@ function _chart(d3, data) {
       .attr("dy", "0.35em")
       .attr("fill-opacity", d => +labelVisible(d.current))
       .attr("transform", d => labelTransform(d.current))
-      .text(d => d.data.name);
+      .style("font-size", d => `${calculateFontSize(d)}px`)
+      .each(function(d) {
+        const lines = insertLineBreaks(d.data.name);
+        d3.select(this).selectAll("tspan")
+          .data(lines)
+          .join("tspan")
+          .attr("x", 0)
+          .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
+          .text(d => d);
+      });
 
   // Create the center circle
   const parent = svg.append("circle")
@@ -110,7 +148,25 @@ function _chart(d3, data) {
       return +this.getAttribute("fill-opacity") || labelVisible(d.target);
     }).transition(t)
         .attr("fill-opacity", d => +labelVisible(d.target))
-        .attrTween("transform", d => () => labelTransform(d.current));
+        .attrTween("transform", d => () => labelTransform(d.current))
+        .tween("text", function(d) {
+          const i = d3.interpolate(d.current, d.target);
+          return function(t) {
+            d.current = i(t);
+            const fontSize = calculateFontSize(d);
+            d3.select(this)
+              .style("font-size", `${fontSize}px`)
+              .attr("transform", labelTransform(d.current));
+            
+            const lines = insertLineBreaks(d.data.name);
+            d3.select(this).selectAll("tspan")
+              .data(lines)
+              .join("tspan")
+              .attr("x", 0)
+              .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
+              .text(d => d);
+          };
+        });
   }
   
   function arcVisible(d) {
