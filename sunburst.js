@@ -18,19 +18,19 @@ function _chart(d3, data) {
     "#D4A5A5"  // Rich mauve
   ];
 
-  let darkerColors = [
-     "#8B3A1E",
-     "#A18860",
-     "#A99585",
-     "#517666",
-     "#005D5D",
-     "#5A6D90",
-     "#688092",
-     "#809D95",
-     "#96A39C",
-        ];
+  const darkerColors = [
+    "#8B3A1E",
+    "#A18860",
+    "#A99585",
+    "#517666",
+    "#005D5D",
+    "#5A6D90",
+    "#688092",
+    "#809D95",
+    "#96A39C",
+  ];
 
-  const color = d3.scaleOrdinal()
+  let color = d3.scaleOrdinal()
     .domain(data.children.map(d => d.name))
     .range(richerColors);
 
@@ -85,16 +85,6 @@ function _chart(d3, data) {
     .filter((d) => d.children)
     .style("cursor", "pointer")
     .on("click", clicked);
-
-//  const format = d3.format(",d");
-//  path.append("title").text(
-//    (d) =>
-//      `${d
-//       .ancestors()
-//        .map((d) => d.data.name)
-//        .reverse()
-//        .join("/")}\n${format(d.value)}`
-//  );
 
   // Function to calculate font size
   function calculateFontSize(d) {
@@ -263,34 +253,39 @@ function _chart(d3, data) {
     return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
   }
 
-    function labelTransform(d) {
-         const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
-         const y = (d.y0 + d.y1) / 2 * radius;
-         const rotation = x - 90;
-         const translate = `translate(${y},0)`;
-         return `rotate(${rotation}) ${translate} rotate(${-rotation})`;
-        }
+  function labelTransform(d) {
+    const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
+    const y = (d.y0 + d.y1) / 2 * radius;
+    return `translate(${y},0)`;
+  }
 
-          // Dark mode toggle functionality
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const logo = document.getElementById('logo');
+  // Dark mode toggle functionality
+  function updateColors(isDarkMode) {
+    const textColor = isDarkMode ? 'white' : 'black';
+    
+    if (isDarkMode) {
+      color.range(darkerColors);
+      svg.attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #202020; cursor: pointer; font-family: 'Poppins', sans-serif;`);
+    } else {
+      color.range(richerColors);
+      svg.attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`);
+    }
 
-        darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            updateColors();
-        });
+    path.attr("fill", (d) => {
+      while (d.depth > 1) d = d.parent;
+      return color(d.data.name);
+    });
 
-        function updateColors() {
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            const textColor = isDarkMode ? 'white' : 'black';
-            
-            if (isDarkMode) {
-                color.range(darkerColors);
-                logo.src = 'dark-logo.png';
-            } else {
-                color.range(richerColors);
-                logo.src = 'logo.png';
-            }
+    label.attr("fill", textColor);
+    tooltipText.attr("fill", textColor);
+  }
+
+  // Set up event listener for dark mode toggle
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    updateColors(document.body.classList.contains('dark-mode'));
+  });
 
   return svg.node();
 }
