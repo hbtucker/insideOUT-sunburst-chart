@@ -68,11 +68,23 @@ function _chart(d3, data) {
     .attr("pointer-events", (d) => (arcVisible(d.current) ? "auto" : "none"))
     .attr("d", (d) => arc(d.current));
 
-  // Make them clickable if they have children.
+// Make them clickable if they have children and add hover animation.
   path
     .filter((d) => d.children)
     .style("cursor", "pointer")
-    .on("click", clicked);
+    .on("click", clicked)
+    .on("mouseover", function() {
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr("fill-opacity", 1);
+    })
+    .on("mouseout", function(event, d) {
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr("fill-opacity", arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0);
+    });
 
 //  const format = d3.format(",d");
 //  path.append("title").text(
@@ -251,11 +263,11 @@ function _chart(d3, data) {
     return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
   }
 
-  function labelTransform(d) {
-    const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-    const y = ((d.y0 + d.y1) / 2) * radius;
-    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-  }
+function labelTransform(d) {
+  const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
+  const y = (d.y0 + d.y1) / 2 * radius;
+  return `translate(${y * Math.cos(x * Math.PI / 180)},${y * Math.sin(x * Math.PI / 180)})`;
+}
 
   return svg.node();
 }
