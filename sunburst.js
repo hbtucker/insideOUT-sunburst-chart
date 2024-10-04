@@ -256,6 +256,11 @@ function labelTransform(d) {
   function updateColors(isDarkMode) {
     const textColor = isDarkMode ? 'white' : 'black';
     const backgroundColor = isDarkMode ? '#202020' : '#fff';
+  }
+    function updateToggleText() {
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    darkModeToggle.textContent = isDarkMode ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+}
     
     color.range(isDarkMode ? darkerColors : richerColors);
 
@@ -283,6 +288,7 @@ function labelTransform(d) {
     darkModeToggle.addEventListener('click', () => {
       const isDarkMode = document.body.classList.toggle('dark-mode');
       updateColors(isDarkMode);
+      updateToggleText();
     });
   }
 
