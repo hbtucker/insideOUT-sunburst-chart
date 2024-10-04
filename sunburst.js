@@ -52,8 +52,11 @@ function _chart(d3, data) {
       `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
     );
 
+  // Create a group for the paths and labels
+  const g = svg.append("g");
+
   // Append the arcs.
-  const path = svg
+  const path = g
     .append("g")
     .selectAll("path")
     .data(root.descendants().slice(1))
@@ -68,7 +71,7 @@ function _chart(d3, data) {
     .attr("pointer-events", (d) => (arcVisible(d.current) ? "auto" : "none"))
     .attr("d", (d) => arc(d.current));
 
-// Make them clickable if they have children and add hover animation.
+  // Make them clickable if they have children and add hover animation.
   path
     .filter((d) => d.children)
     .style("cursor", "pointer")
@@ -85,16 +88,6 @@ function _chart(d3, data) {
         .duration(200)
         .attr("fill-opacity", arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0);
     });
-
-//  const format = d3.format(",d");
-//  path.append("title").text(
-//    (d) =>
-//      `${d
-//       .ancestors()
-//        .map((d) => d.data.name)
-//        .reverse()
-//        .join("/")}\n${format(d.value)}`
-//  );
 
   // Function to calculate font size
   function calculateFontSize(d) {
@@ -125,7 +118,7 @@ function _chart(d3, data) {
     return lines;
   }
 
-  const label = svg
+  const label = g
     .append("g")
     .attr("pointer-events", "none")
     .attr("text-anchor", "middle")
@@ -210,32 +203,25 @@ function _chart(d3, data) {
 
     const t = svg.transition().duration(750);
 
-    // Transition the data on all arcs, even the ones that aren't visible,
-    // so that if this transition is interrupted, entering arcs will start
-    // the next transition from the desired position.
+    // Update the data for visible arcs
     path.data(root.descendants().slice(1))
       .transition(t)
-      .tween("data", (d) => {
+      .tween("data", d => {
         const i = d3.interpolate(d.current, d.target);
-        return (t) => (d.current = i(t));
+        return t => d.current = i(t);
       })
-      .filter(function (d) {
+      .filter(function(d) {
         return +this.getAttribute("fill-opacity") || arcVisible(d.target);
       })
-      .attr("fill-opacity", (d) =>
-        arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0
-      )
-      .attr("pointer-events", (d) => (arcVisible(d.target) ? "auto" : "none"))
-      .attrTween("d", (d) => () => arc(d.current));
+      .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
+      .attr("pointer-events", d => arcVisible(d.target) ? "auto" : "none")
+      .attrTween("d", d => () => arc(d.current));
 
+    // Update the data for visible labels
     label.data(root.descendants().slice(1))
       .transition(t)
-      .filter(function (d) {
-        return +this.getAttribute("fill-opacity") || labelVisible(d.target);
-      })
-      .transition(t)
-      .attr("fill-opacity", (d) => +labelVisible(d.target))
-      .attrTween("transform", (d) => () => labelTransform(d.current))
+      .attr("fill-opacity", d => +labelVisible(d.target))
+      .attrTween("transform", d => () => labelTransform(d.current))
       .tween("text", function(d) {
         const i = d3.interpolate(d.current, d.target);
         return function(t) {
@@ -254,6 +240,7 @@ function _chart(d3, data) {
             .text(d => d);
         };
       });
+
     // Remove paths and labels that are no longer visible
     path.filter(d => !arcVisible(d.target)).remove();
     label.filter(d => !labelVisible(d.target)).remove();
@@ -267,13 +254,13 @@ function _chart(d3, data) {
     return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
   }
 
-function labelTransform(d) {
-  const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
-  const y = (d.y0 + d.y1) / 2 * radius;
-  const rotation = x - 90;
-  const translate = y;
-  return `rotate(${rotation}) translate(${translate},0) rotate(${rotation > 90 ? 180 : 0})`;
-}
+  function labelTransform(d) {
+    const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
+    const y = (d.y0 + d.y1) / 2 * radius;
+    const rotation = x - 90;
+    const translate = y;
+    return `rotate(${rotation}) translate(${translate},0) rotate(${rotation > 90 ? 180 : 0})`;
+  }
 
   return svg.node();
 }
