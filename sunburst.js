@@ -1,4 +1,9 @@
-function _chart(d3, data) {
+function _chart(d3, data, styles) {
+  // Inject the styles
+  const style = document.createElement('style');
+  style.textContent = styles;
+  document.head.appendChild(style);
+
   // Specify the chart's dimensions.
   const width = 928;
   const height = width;
@@ -219,6 +224,21 @@ function _chart(d3, data) {
   return svg.node();
 }
 
+function _styles() {
+  return `
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap');
+    .sunburst-chart {
+      font-family: 'Poppins', sans-serif;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 -8px;
+      background: #fff;
+      cursor: pointer;
+    }
+  `;
+}
+
 function _data(FileAttachment) {
   return FileAttachment("data.json").json();
 }
@@ -230,7 +250,8 @@ export default function define(runtime, observer) {
     ["data.json", {url: new URL("./data/data.json", import.meta.url), mimeType: "application/json", toString}]
   ]);
   main.builtin("FileAttachment", runtime.fileAttachments(name => fileAttachments.get(name)));
-  main.variable(observer("chart")).define("chart", ["d3","data"], _chart);
+  main.variable(observer("chart")).define("chart", ["d3", "data", "styles"], _chart);
+  main.variable(observer("styles")).define("styles", _styles);
   main.variable(observer("data")).define("data", ["FileAttachment"], _data);
   return main;
 }
