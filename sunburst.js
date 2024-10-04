@@ -52,95 +52,87 @@ function _chart(d3, data) {
       `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
     );
 
-  // Append the arcs.
-  const path = svg
-    .append("g")
-    .selectAll("path")
-    .data(root.descendants().slice(1))
-    .join("path")
-    .attr("fill", (d) => {
-      while (d.depth > 1) d = d.parent;
-      return color(d.data.name);
-    })
-    .attr("fill-opacity", (d) =>
-      arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0
-    )
-    .attr("pointer-events", (d) => (arcVisible(d.current) ? "auto" : "none"))
-    .attr("d", (d) => arc(d.current));
+  const g = svg.append("g");
+
+  // Function to create paths
+  function createPaths(root) {
+    return g.append("g")
+      .selectAll("path")
+      .data(root.descendants().slice(1))
+      .join("path")
+      .attr("fill", (d) => {
+        while (d.depth > 1) d = d.parent;
+        return color(d.data.name);
+      })
+      .attr("fill-opacity", (d) =>
+        arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0
+      )
+      .attr("pointer-events", (d) => (arcVisible(d.current) ? "auto" : "none"))
+      .attr("d", (d) => arc(d.current));
+  }
+
+  // Function to create labels
+  function createLabels(root) {
+    return g.append("g")
+      .attr("pointer-events", "none")
+      .attr("text-anchor", "middle")
+      .style("user-select", "none")
+      .selectAll("text")
+      .data(root.descendants().slice(1))
+      .join("text")
+      .attr("dy", "0.35em")
+      .attr("fill-opacity", (d) => +labelVisible(d.current))
+      .attr("transform", (d) => labelTransform(d.current))
+      .style("font-size", (d) => `${calculateFontSize(d)}px`)
+      .each(function(d) {
+        const lines = insertLineBreaks(d.data.name);
+        d3.select(this).selectAll("tspan")
+          .data(lines)
+          .join("tspan")
+          .attr("x", 0)
+          .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
+          .text(d => d);
+      });
+  }
+
+  // Initial creation of paths and labels
+  let path = createPaths(root);
+  let label = createLabels(root);
 
   // Make them clickable if they have children and add hover effect.
-  path
-    .filter((d) => d.children)
-    .style("cursor", "pointer")
-    .on("click", clicked)
-    .on("mouseover", function(event, d) {
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .attr("fill-opacity", 1)
-        .attr("transform", (d) => {
-          const [x, y] = arc.centroid(d.current);
-          return `translate(${x * 0.05},${y * 0.05})`;
-        });
-    })
-    .on("mouseout", function(event, d) {
-      d3.select(this)
-        .transition()
-        .duration(200)
-        .attr("fill-opacity", arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
-        .attr("transform", "translate(0,0)");
-    });
+  function setupPathInteractions(path) {
+    path
+      .filter((d) => d.children)
+      .style("cursor", "pointer")
+      .on("click", clicked)
+      .on("mouseover", function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("fill-opacity", 1)
+          .attr("transform", (d) => {
+            const [x, y] = arc.centroid(d.current);
+            return `translate(${x * 0.05},${y * 0.05})`;
+          });
+      })
+      .on("mouseout", function(event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("fill-opacity", arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
+          .attr("transform", "translate(0,0)");
+      });
 
-  // Function to calculate font size
-  function calculateFontSize(d) {
-    const node = d.current;
-    const angle = node.x1 - node.x0;
-    const radius = (node.y0 + node.y1) / 2;
-    const circumference = angle * radius;
-    const maxFontSize = Math.min(14, circumference / 4);
-    const minFontSize = 8;
-    return Math.max(minFontSize, maxFontSize);
+    path.filter(d => !d.children)
+      .style('cursor', 'pointer')
+      .on('click', (event, d) => {
+        if (d.data.url) {
+          window.open(d.data.url, '_blank');
+        }
+      });
   }
 
-  // Function to insert line breaks
-  function insertLineBreaks(text) {
-    const words = text.split(/\s+/);
-    let lines = [];
-    let currentLine = words[0];
-
-    for (let i = 1; i < words.length; i++) {
-      if (currentLine.length + words[i].length + 1 <= 10) {
-        currentLine += " " + words[i];
-      } else {
-        lines.push(currentLine);
-        currentLine = words[i];
-      }
-    }
-    lines.push(currentLine);
-    return lines;
-  }
-
-  const label = svg
-    .append("g")
-    .attr("pointer-events", "none")
-    .attr("text-anchor", "middle")
-    .style("user-select", "none")
-    .selectAll("text")
-    .data(root.descendants().slice(1))
-    .join("text")
-    .attr("dy", "0.35em")
-    .attr("fill-opacity", (d) => +labelVisible(d.current))
-    .attr("transform", (d) => labelTransform(d.current))
-    .style("font-size", (d) => `${calculateFontSize(d)}px`)
-    .each(function(d) {
-      const lines = insertLineBreaks(d.data.name);
-      d3.select(this).selectAll("tspan")
-        .data(lines)
-        .join("tspan")
-        .attr("x", 0)
-        .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
-        .text(d => d);
-    });
+  setupPathInteractions(path);
 
   const parent = svg
     .append("circle")
@@ -205,6 +197,17 @@ function _chart(d3, data) {
 
     const t = svg.transition().duration(750);
 
+    // Remove old paths and labels
+    path.remove();
+    label.remove();
+
+    // Create new paths and labels
+    path = createPaths(root);
+    label = createLabels(root);
+
+    // Setup interactions for new paths
+    setupPathInteractions(path);
+
     // Transition the data on all arcs, even the ones that aren't visible,
     // so that if this transition is interrupted, entering arcs will start
     // the next transition from the desired position.
@@ -229,25 +232,7 @@ function _chart(d3, data) {
       })
       .transition(t)
       .attr("fill-opacity", (d) => +labelVisible(d.target))
-      .attrTween("transform", (d) => () => labelTransform(d.current))
-      .tween("text", function(d) {
-        const i = d3.interpolate(d.current, d.target);
-        return function(t) {
-          d.current = i(t);
-          const fontSize = calculateFontSize(d);
-          d3.select(this)
-            .style("font-size", `${fontSize}px`)
-            .attr("transform", labelTransform(d.current));
-          
-          const lines = insertLineBreaks(d.data.name);
-          d3.select(this).selectAll("tspan")
-            .data(lines)
-            .join("tspan")
-            .attr("x", 0)
-            .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
-            .text(d => d);
-        };
-      });
+      .attrTween("transform", (d) => () => labelTransform(d.current));
   }
 
   function arcVisible(d) {
@@ -262,6 +247,35 @@ function _chart(d3, data) {
     const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
     const y = ((d.y0 + d.y1) / 2) * radius;
     return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+  }
+
+  // Function to calculate font size
+  function calculateFontSize(d) {
+    const node = d.current;
+    const angle = node.x1 - node.x0;
+    const radius = (node.y0 + node.y1) / 2;
+    const circumference = angle * radius;
+    const maxFontSize = Math.min(14, circumference / 4);
+    const minFontSize = 8;
+    return Math.max(minFontSize, maxFontSize);
+  }
+
+  // Function to insert line breaks
+  function insertLineBreaks(text) {
+    const words = text.split(/\s+/);
+    let lines = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+      if (currentLine.length + words[i].length + 1 <= 10) {
+        currentLine += " " + words[i];
+      } else {
+        lines.push(currentLine);
+        currentLine = words[i];
+      }
+    }
+    lines.push(currentLine);
+    return lines;
   }
 
   return svg.node();
