@@ -46,8 +46,8 @@ function _chart(d3, data) {
     .data(root.descendants().slice(1))
     .join("path")
     .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
-    .attr("fill-opacity", d => arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0)
-    .attr("d", arc);
+    .attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
+    .attr("d", d => arc(d.current));
 
   // Make them clickable if they have children and add hover animation.
   path.filter(d => d.children)
@@ -57,7 +57,7 @@ function _chart(d3, data) {
       d3.select(this).attr("fill-opacity", 1);
     })
     .on("mouseout", function(event, d) {
-      d3.select(this).attr("fill-opacity", arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0);
+      d3.select(this).attr("fill-opacity", arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0);
     });
 
   // Function to calculate font size
@@ -97,9 +97,9 @@ function _chart(d3, data) {
     .data(root.descendants().slice(1))
     .join("text")
     .attr("dy", "0.35em")
-    .attr("fill-opacity", d => +labelVisible(d))
-    .attr("transform", d => labelTransform(d))
-    .style("font-size", d => `${calculateFontSize(d)}px`)
+    .attr("fill-opacity", d => +labelVisible(d.current))
+    .attr("transform", d => labelTransform(d.current))
+    .style("font-size", d => `${calculateFontSize(d.current)}px`)
     .each(function(d) {
       const lines = insertLineBreaks(d.data.name);
       d3.select(this).selectAll("tspan")
@@ -164,7 +164,9 @@ function _chart(d3, data) {
 
     const t = svg.transition().duration(750);
 
-    path.transition(t)
+    // Update the data for visible arcs
+    path.data(root.descendants().slice(1))
+      .transition(t)
       .tween("data", d => {
         const i = d3.interpolate(d.current, d.target);
         return t => d.current = i(t);
@@ -175,7 +177,9 @@ function _chart(d3, data) {
       .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
       .attrTween("d", d => () => arc(d.current));
 
-    label.transition(t)
+    // Update the data for visible labels
+    label.data(root.descendants().slice(1))
+      .transition(t)
       .attr("fill-opacity", d => +labelVisible(d.target))
       .attrTween("transform", d => () => labelTransform(d.current))
       .tween("text", function(d) {
