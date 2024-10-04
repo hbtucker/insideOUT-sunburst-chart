@@ -254,26 +254,22 @@ function _chart(d3, data) {
   }
 
   function labelTransform(d) {
-    const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
-    const y = (d.y0 + d.y1) / 2 * radius;
-    return `translate(${y},0)`;
+    const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
+    const y = ((d.y0 + d.y1) / 2) * radius;
+    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
   }
 
   // Dark mode toggle functionality
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  const logo = document.getElementById('logo');
-
-  function updateColors() {
-    const isDarkMode = document.body.classList.contains('dark-mode');
+  function updateColors(isDarkMode) {
     const textColor = isDarkMode ? 'white' : 'black';
     const backgroundColor = isDarkMode ? '#202020' : '#fff';
     
     if (isDarkMode) {
       color.range(darkerColors);
-      logo.src = 'dark-logo.png';
+      document.getElementById('logo').src = 'dark-logo.png';
     } else {
       color.range(richerColors);
-      logo.src = 'logo.png';
+      document.getElementById('logo').src = 'logo.png';
     }
 
     svg.attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: ${backgroundColor}; cursor: pointer; font-family: 'Poppins', sans-serif;`);
@@ -288,10 +284,14 @@ function _chart(d3, data) {
     tooltipRect.attr("fill", isDarkMode ? "#333" : "#f6f6f6");
   }
 
-  darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    updateColors();
-  });
+  // Set up event listener for dark mode toggle
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      updateColors(document.body.classList.contains('dark-mode'));
+    });
+  }
 
   return svg.node();
 }
