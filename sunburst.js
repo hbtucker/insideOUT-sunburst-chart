@@ -46,8 +46,8 @@ function _chart(d3, data) {
     .data(root.descendants().slice(1))
     .join("path")
     .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
-    .attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
-    .attr("d", d => arc(d.current));
+    .attr("fill-opacity", d => arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0)
+    .attr("d", arc);
 
   // Make them clickable if they have children and add hover animation.
   path.filter(d => d.children)
@@ -57,12 +57,13 @@ function _chart(d3, data) {
       d3.select(this).attr("fill-opacity", 1);
     })
     .on("mouseout", function(event, d) {
-      d3.select(this).attr("fill-opacity", arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0);
+      d3.select(this).attr("fill-opacity", arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0);
     });
 
   // Function to calculate font size
   function calculateFontSize(d) {
-    const angle = d.x1 - d.x0;
+    if (!d) return 8; // Default to minimum font size if d is undefined
+    const angle = Math.abs(d.x1 - d.x0);
     const radius = Math.sqrt((d.y0 + d.y1) / 2);
     const circumference = angle * radius;
     const maxFontSize = Math.min(14, circumference / 4);
@@ -72,6 +73,7 @@ function _chart(d3, data) {
 
   // Function to insert line breaks
   function insertLineBreaks(text) {
+    if (!text) return []; // Return empty array if text is undefined
     const words = text.split(/\s+/);
     let lines = [];
     let currentLine = words[0];
@@ -97,9 +99,9 @@ function _chart(d3, data) {
     .data(root.descendants().slice(1))
     .join("text")
     .attr("dy", "0.35em")
-    .attr("fill-opacity", d => +labelVisible(d.current))
-    .attr("transform", d => labelTransform(d.current))
-    .style("font-size", d => `${calculateFontSize(d.current)}px`)
+    .attr("fill-opacity", d => +labelVisible(d))
+    .attr("transform", d => labelTransform(d))
+    .style("font-size", d => `${calculateFontSize(d)}px`)
     .each(function(d) {
       const lines = insertLineBreaks(d.data.name);
       d3.select(this).selectAll("tspan")
@@ -207,14 +209,15 @@ function _chart(d3, data) {
   }
 
   function arcVisible(d) {
-    return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
+    return d && d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
   }
 
   function labelVisible(d) {
-    return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+    return d && d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
   }
 
   function labelTransform(d) {
+    if (!d) return ""; // Return empty string if d is undefined
     const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
     const y = (Math.sqrt(d.y0) + Math.sqrt(d.y1)) / 2;
     return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
