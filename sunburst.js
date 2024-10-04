@@ -86,7 +86,7 @@ function _chart(d3, data) {
     const radius = (node.y0 + node.y1) / 2;
     const circumference = angle * radius;
     const maxFontSize = Math.min(14, circumference / 4);
-    const minFontSize = 8;
+    const minFontSize = 10;
     return Math.max(minFontSize, maxFontSize);
   }
 
@@ -255,7 +255,7 @@ function _chart(d3, data) {
   // Dark mode toggle functionality
   function updateColors(isDarkMode) {
     const textColor = isDarkMode ? 'white' : 'black';
-    const backgroundColor = isDarkMode ? '#202020' : '#fff';
+    const backgroundColor = isDarkMode ? '#191919' : '#fff';
     
     color.range(isDarkMode ? darkerColors : richerColors);
 
