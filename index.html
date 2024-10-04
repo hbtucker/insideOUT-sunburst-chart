@@ -11,10 +11,26 @@
             height: auto;
             z-index: 1000;
         }
+        #darkModeToggle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        body.dark-mode {
+            background-color: #202020;
+        }
 </style>
 <body>
    <div id="chart">
         <img id="logo" src="logo.png" alt="Logo">
+        <button id="darkModeToggle">Switch to Dark Mode</button>
     </div>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap" rel="stylesheet">
 <script type="module">
