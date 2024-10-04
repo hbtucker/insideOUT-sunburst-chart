@@ -1,8 +1,20 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<title>Zoomable sunburst</title>
-<link rel="stylesheet" type="text/css" href="./inspector.css">
-<style>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>InsideOUT Sunburst Org Chart</title>
+    <link rel="stylesheet" type="text/css" href="./inspector.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        #chart-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
         #logo {
             position: absolute;
             top: 20px;
@@ -13,32 +25,34 @@
         }
         #darkModeToggle {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 20px;
+            left: 20px;
             z-index: 1000;
-            padding: 5px 10px;
+            padding: 10px 15px;
             background-color: #333;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            font-family: 'Poppins', sans-serif;
         }
         body.dark-mode {
             background-color: #202020;
+            color: white;
         }
-</style>
+    </style>
+</head>
 <body>
-   <div id="chart">
+    <div id="chart-container">
         <img id="logo" src="logo.png" alt="Logo">
-        <button id="darkModeToggle">Switch to Dark Mode</button>
+        <button id="darkModeToggle">Toggle Dark Mode</button>
     </div>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap" rel="stylesheet">
-<script type="module">
+    <script type="module">
+        import define from "./index.js";
+        import {Runtime, Library, Inspector} from "./runtime.js";
 
-import define from "./index.js";
-import {Runtime, Library, Inspector} from "./runtime.js";
-
-const runtime = new Runtime();
-const main = runtime.module(define, Inspector.into(document.body));
-
-</script>
+        const runtime = new Runtime();
+        const main = runtime.module(define, Inspector.into(document.getElementById("chart-container")));
+    </script>
+</body>
+</html>
