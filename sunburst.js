@@ -108,27 +108,27 @@ function _chart(d3, data) {
     return lines;
   }
 
-  const label = svg
-    .append("g")
-    .attr("pointer-events", "none")
-    .attr("text-anchor", "middle")
-    .style("user-select", "none")
-    .selectAll("text")
-    .data(root.descendants().slice(1))
-    .join("text")
-    .attr("dy", "0.35em")
-    .attr("fill-opacity", (d) => +labelVisible(d.current))
-    .attr("transform", (d) => labelTransform(d.current))
-    .style("font-size", (d) => `${calculateFontSize(d)}px`)
-    .each(function(d) {
-      const lines = insertLineBreaks(d.data.name);
-      d3.select(this).selectAll("tspan")
-        .data(lines)
-        .join("tspan")
-        .attr("x", 0)
-        .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
-        .text(d => d);
-    });
+const label = svg
+  .append("g")
+  .attr("pointer-events", "none")
+  .attr("text-anchor", "middle")
+  .style("user-select", "none")
+  .selectAll("text")
+  .data(root.descendants().slice(1))
+  .join("text")
+  .attr("dy", "0.35em")
+  .attr("fill-opacity", (d) => +labelVisible(d.current))
+  .attr("transform", (d) => labelTransform(d.current))
+  .style("font-size", (d) => `${calculateFontSize(d)}px`)
+  .each(function(d) {
+    const lines = insertLineBreaks(d.data.name);
+    d3.select(this).selectAll("tspan")
+      .data(lines)
+      .join("tspan")
+      .attr("x", 0)
+      .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
+      .text(d => d);
+  });
 
   const parent = svg
     .append("circle")
@@ -211,31 +211,31 @@ function _chart(d3, data) {
       .attr("pointer-events", (d) => (arcVisible(d.target) ? "auto" : "none"))
       .attrTween("d", (d) => () => arc(d.current));
 
-    label
-      .filter(function (d) {
-        return +this.getAttribute("fill-opacity") || labelVisible(d.target);
-      })
-      .transition(t)
-      .attr("fill-opacity", (d) => +labelVisible(d.target))
-      .attrTween("transform", (d) => () => labelTransform(d.current))
-      .tween("text", function(d) {
-        const i = d3.interpolate(d.current, d.target);
-        return function(t) {
-          d.current = i(t);
-          const fontSize = calculateFontSize(d);
-          d3.select(this)
-            .style("font-size", `${fontSize}px`)
-            .attr("transform", labelTransform(d.current));
-          
-          const lines = insertLineBreaks(d.data.name);
-          d3.select(this).selectAll("tspan")
-            .data(lines)
-            .join("tspan")
-            .attr("x", 0)
-            .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
-            .text(d => d);
-        };
-      });
+label
+  .filter(function (d) {
+    return +this.getAttribute("fill-opacity") || labelVisible(d.target);
+  })
+  .transition(t)
+  .attr("fill-opacity", (d) => +labelVisible(d.target))
+  .attrTween("transform", (d) => () => labelTransform(d.current))
+  .tween("text", function(d) {
+    const i = d3.interpolate(d.current, d.target);
+    return function(t) {
+      d.current = i(t);
+      const fontSize = calculateFontSize(d);
+      d3.select(this)
+        .style("font-size", `${fontSize}px`)
+        .attr("transform", labelTransform(d.current));
+      
+      const lines = insertLineBreaks(d.data.name);
+      d3.select(this).selectAll("tspan")
+        .data(lines)
+        .join("tspan")
+        .attr("x", 0)
+        .attr("dy", (_, i) => i === 0 ? "0em" : "1em")
+        .text(d => d);
+    };
+  });
   }
 
   function arcVisible(d) {
@@ -246,11 +246,11 @@ function _chart(d3, data) {
     return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
   }
 
-  function labelTransform(d) {
-    const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-    const y = ((d.y0 + d.y1) / 2) * radius;
-    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-  }
+function labelTransform(d) {
+  const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
+  const y = ((d.y0 + d.y1) / 2) * radius;
+  return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+}
 
   // Dark mode toggle functionality
   function updateColors(isDarkMode) {
