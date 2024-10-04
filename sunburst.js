@@ -35,8 +35,7 @@ function _chart(d3, data) {
   // Create the SVG container.
   const svg = d3.create("svg")
     .attr("viewBox", [-width / 2, -height / 2, width, width])
-    .style("font-family", "'Poppins', sans-serif")
-    .attr("style", "max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer;");
+    .attr("class", "sunburst-chart");
 
   // Create a group for the paths and labels
   const g = svg.append("g");
@@ -165,9 +164,7 @@ function _chart(d3, data) {
 
     const t = svg.transition().duration(750);
 
-    // Update the data for visible arcs
-    path.data(root.descendants().slice(1))
-      .transition(t)
+    path.transition(t)
       .tween("data", d => {
         const i = d3.interpolate(d.current, d.target);
         return t => d.current = i(t);
@@ -178,9 +175,7 @@ function _chart(d3, data) {
       .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
       .attrTween("d", d => () => arc(d.current));
 
-    // Update the data for visible labels
-    label.data(root.descendants().slice(1))
-      .transition(t)
+    label.transition(t)
       .attr("fill-opacity", d => +labelVisible(d.target))
       .attrTween("transform", d => () => labelTransform(d.current))
       .tween("text", function(d) {
