@@ -18,7 +18,7 @@ function _chart(d3, data) {
     "#D4A5A5"  // Rich mauve
   ];
 
-  const darkerColors = [
+  let darkerColors = [
     "#8B3A1E",
     "#A18860",
     "#A99585",
@@ -30,7 +30,7 @@ function _chart(d3, data) {
     "#96A39C",
   ];
 
-  let color = d3.scaleOrdinal()
+  const color = d3.scaleOrdinal()
     .domain(data.children.map(d => d.name))
     .range(richerColors);
 
@@ -260,16 +260,23 @@ function _chart(d3, data) {
   }
 
   // Dark mode toggle functionality
-  function updateColors(isDarkMode) {
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const logo = document.getElementById('logo');
+
+  function updateColors() {
+    const isDarkMode = document.body.classList.contains('dark-mode');
     const textColor = isDarkMode ? 'white' : 'black';
+    const backgroundColor = isDarkMode ? '#202020' : '#fff';
     
     if (isDarkMode) {
       color.range(darkerColors);
-      svg.attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #202020; cursor: pointer; font-family: 'Poppins', sans-serif;`);
+      logo.src = 'dark-logo.png';
     } else {
       color.range(richerColors);
-      svg.attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`);
+      logo.src = 'logo.png';
     }
+
+    svg.attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: ${backgroundColor}; cursor: pointer; font-family: 'Poppins', sans-serif;`);
 
     path.attr("fill", (d) => {
       while (d.depth > 1) d = d.parent;
@@ -278,13 +285,12 @@ function _chart(d3, data) {
 
     label.attr("fill", textColor);
     tooltipText.attr("fill", textColor);
+    tooltipRect.attr("fill", isDarkMode ? "#333" : "#f6f6f6");
   }
 
-  // Set up event listener for dark mode toggle
-  const darkModeToggle = document.getElementById('darkModeToggle');
   darkModeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
-    updateColors(document.body.classList.contains('dark-mode'));
+    updateColors();
   });
 
   return svg.node();
