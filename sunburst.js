@@ -251,11 +251,13 @@ function _chart(d3, data) {
     return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
   }
 
-function labelTransform(d) {
-  const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
-  const y = ((d.y0 + d.y1) / 2) * radius;
-  return `translate(${y},0)`;
-  }
+    function labelTransform(d) {
+         const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
+         const y = (d.y0 + d.y1) / 2 * radius;
+         const rotation = x - 90;
+         const translate = `translate(${y},0)`;
+         return `rotate(${rotation}) ${translate} rotate(${-rotation})`;
+        }
 
   return svg.node();
 }
