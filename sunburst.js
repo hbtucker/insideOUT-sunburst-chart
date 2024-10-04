@@ -213,7 +213,7 @@ function _chart(d3, data) {
     // Transition the data on all arcs, even the ones that aren't visible,
     // so that if this transition is interrupted, entering arcs will start
     // the next transition from the desired position.
-    path
+    path.data(root.descendants().slice(1))
       .transition(t)
       .tween("data", (d) => {
         const i = d3.interpolate(d.current, d.target);
@@ -228,7 +228,8 @@ function _chart(d3, data) {
       .attr("pointer-events", (d) => (arcVisible(d.target) ? "auto" : "none"))
       .attrTween("d", (d) => () => arc(d.current));
 
-    label
+    label.data(root.descendants().slice(1))
+      .transition(t)
       .filter(function (d) {
         return +this.getAttribute("fill-opacity") || labelVisible(d.target);
       })
@@ -253,6 +254,9 @@ function _chart(d3, data) {
             .text(d => d);
         };
       });
+    // Remove paths and labels that are no longer visible
+    path.filter(d => !arcVisible(d.target)).remove();
+    label.filter(d => !labelVisible(d.target)).remove();
   }
 
   function arcVisible(d) {
@@ -266,7 +270,9 @@ function _chart(d3, data) {
 function labelTransform(d) {
   const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
   const y = (d.y0 + d.y1) / 2 * radius;
-  return `translate(${y * Math.cos(x * Math.PI / 180)},${y * Math.sin(x * Math.PI / 180)})`;
+  const rotation = x - 90;
+  const translate = y;
+  return `rotate(${rotation}) translate(${translate},0) rotate(${rotation > 90 ? 180 : 0})`;
 }
 
   return svg.node();
