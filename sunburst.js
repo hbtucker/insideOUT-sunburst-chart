@@ -2,7 +2,7 @@ function _chart(d3, data) {
   // Specify the chart's dimensions.
   const width = 928;
   const height = width;
-  const radius = width / 12;
+  const radius = width / 2;
 
   // Create the color scale with richer colors
   const richerColors = [
@@ -15,68 +15,73 @@ function _chart(d3, data) {
     "#5A6D90", "#688092", "#809D95", "#96A39C"
   ];
 
-  let color = d3.scaleOrdinal()
-    .domain(data.children.map(d => d.name))
-    .range(richerColors);
+  let color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
 
-  // Compute the layout.
-  const root = d3.hierarchy(data)
-    .sum(d => d.value)
-    .sort((a, b) => b.value - a.value);
-  const partition = d3.partition()
-    .size([2 * Math.PI, radius * radius]);
-  partition(root);
+  // Create the partition layout
+  const partition = data => {
+    const root = d3.hierarchy(data)
+        .sum(d => d.value)
+        .sort((a, b) => b.value - a.value);
+    return d3.partition()
+        .size([2 * Math.PI, root.height + 1])
+      (root);
+  }
 
-  // Create the arc generator.
+  const root = partition(data);
+
+  root.each(d => d.current = d);
+
+  // Create the arc generator
   const arc = d3.arc()
-    .startAngle(d => d.x0)
-    .endAngle(d => d.x1)
-    .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
-    .padRadius(radius / 2)
-    .innerRadius(d => Math.sqrt(d.y0))
-    .outerRadius(d => Math.sqrt(d.y1) - 1);
+      .startAngle(d => d.x0)
+      .endAngle(d => d.x1)
+      .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+      .padRadius(radius * 1.5)
+      .innerRadius(d => d.y0 * radius)
+      .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1));
 
-  // Create the SVG container.
+  // Create the SVG container
   const svg = d3.create("svg")
-    .attr("viewBox", [-width / 2, -height / 2, width, width])
-    .style("font", "10px sans-serif");
+      .attr("viewBox", [-width / 2, -height / 2, width, width])
+      .style("font", "10px sans-serif");
 
-  // Append the arcs.
+  // Append the arcs
   const path = svg.append("g")
     .selectAll("path")
-    .data(root.descendants().filter(d => d.depth))
+    .data(root.descendants().slice(1))
     .join("path")
-    .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
-    .attr("fill-opacity", d => arcVisible(d) ? (d.children ? 0.6 : 0.4) : 0)
-    .attr("d", arc);
+      .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
+      .attr("fill-opacity", d => arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
+      .attr("pointer-events", d => arcVisible(d.current) ? "auto" : "none")
+      .attr("d", d => arc(d.current));
 
-  // Make them clickable if they have children.
+  // Make them clickable if they have children
   path.filter(d => d.children)
-    .style("cursor", "pointer")
-    .on("click", clicked);
+      .style("cursor", "pointer")
+      .on("click", clicked);
 
-  // Add the labels.
+  // Add the labels
   const label = svg.append("g")
-    .attr("pointer-events", "none")
-    .attr("text-anchor", "middle")
-    .style("user-select", "none")
+      .attr("pointer-events", "none")
+      .attr("text-anchor", "middle")
+      .style("user-select", "none")
     .selectAll("text")
-    .data(root.descendants().filter(d => d.depth && (d.y0 + d.y1) / 2 * (d.x1 - d.x0) > 10))
+    .data(root.descendants().slice(1))
     .join("text")
-    .attr("dy", "0.35em")
-    .attr("fill-opacity", d => +labelVisible(d))
-    .attr("transform", d => labelTransform(d))
-    .text(d => d.data.name);
+      .attr("dy", "0.35em")
+      .attr("fill-opacity", d => +labelVisible(d.current))
+      .attr("transform", d => labelTransform(d.current))
+      .text(d => d.data.name);
 
-  // Add the center circle for returning to the root.
+  // Create the center circle
   const parent = svg.append("circle")
-    .datum(root)
-    .attr("r", radius)
-    .attr("fill", "none")
-    .attr("pointer-events", "all")
-    .on("click", clicked);
+      .datum(root)
+      .attr("r", radius)
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
+      .on("click", clicked);
 
-  // Handle zoom on click.
+  // Handle zoom on click
   function clicked(event, p) {
     parent.datum(p.parent || root);
 
@@ -90,21 +95,22 @@ function _chart(d3, data) {
     const t = svg.transition().duration(750);
 
     path.transition(t)
-      .tween("data", d => {
-        const i = d3.interpolate(d.current, d.target);
-        return t => d.current = i(t);
-      })
+        .tween("data", d => {
+          const i = d3.interpolate(d.current, d.target);
+          return t => d.current = i(t);
+        })
       .filter(function(d) {
         return +this.getAttribute("fill-opacity") || arcVisible(d.target);
       })
-      .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
-      .attrTween("d", d => () => arc(d.current));
+        .attr("fill-opacity", d => arcVisible(d.target) ? (d.children ? 0.6 : 0.4) : 0)
+        .attr("pointer-events", d => arcVisible(d.target) ? "auto" : "none")
+        .attrTween("d", d => () => arc(d.current));
 
     label.filter(function(d) {
       return +this.getAttribute("fill-opacity") || labelVisible(d.target);
     }).transition(t)
-      .attr("fill-opacity", d => +labelVisible(d.target))
-      .attrTween("transform", d => () => labelTransform(d.current));
+        .attr("fill-opacity", d => +labelVisible(d.target))
+        .attrTween("transform", d => () => labelTransform(d.current));
   }
   
   function arcVisible(d) {
@@ -126,7 +132,7 @@ function _chart(d3, data) {
     const textColor = isDarkMode ? 'white' : 'black';
     const backgroundColor = isDarkMode ? '#202020' : '#fff';
     
-    color.range(isDarkMode ? darkerColors : richerColors);
+    color = d3.scaleOrdinal(isDarkMode ? darkerColors : richerColors);
 
     svg.style("background", backgroundColor);
 
