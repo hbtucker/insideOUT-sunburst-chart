@@ -43,16 +43,17 @@
             font-family: 'Poppins', sans-serif;
             font-size: 12px;
         }
-        body.dark-mode {
-            background-color: #191919;
-            color: white;
+            body.light-mode {
+            background-color: #ffffff;
+            color: black;
         }
     </style>
 </head>
-<body>
+<body class="dark-mode">
     <div id="chart">
-        <img id="logo" src="logo.png" alt="Logo">
-        <button id="darkModeToggle">Toggle Dark Mode</button>
+        <img id="logo" src="dark-logo.png" alt="Logo">
+        <button id="darkModeToggle">Switch to Light Mode</button>
+    </div>
     </div>
     <script type="module">
         import define from "./index.js";
