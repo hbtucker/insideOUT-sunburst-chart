@@ -54,7 +54,7 @@ let radius = width / 9;
     .style("font-family", "'Poppins', sans-serif")
     .attr(
       "style",
-      `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;`
+      `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: #191919; cursor: pointer; font-family: 'Poppins', sans-serif;`
     );
 
   // Append the arcs.
@@ -255,7 +255,7 @@ let radius = width / 9;
 // Dark mode toggle functionality
   function updateColors(isLightMode) {
     const textColor = isLightMode ? 'black' : 'white';
-    const backgroundColor = isLightMode ? '#fff' : '#202020';
+    const backgroundColor = isLightMode ? '#fff' : '#191919';
     
     color.range(isLightMode ? richerColors : darkerColors);
 
