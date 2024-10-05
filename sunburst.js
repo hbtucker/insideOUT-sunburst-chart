@@ -252,12 +252,12 @@ let radius = width / 9;
     return `rotate(${x - 90}) translate(${y},0) rotate(${-x + 90})`;
   }
 
-  // Dark mode toggle functionality
-  function updateColors(isDarkMode) {
-    const textColor = isDarkMode ? 'white' : 'black';
-    const backgroundColor = isDarkMode ? '#191919' : '#fff';
+// Dark mode toggle functionality
+  function updateColors(isLightMode) {
+    const textColor = isLightMode ? 'black' : 'white';
+    const backgroundColor = isLightMode ? '#fff' : '#202020';
     
-    color.range(isDarkMode ? darkerColors : richerColors);
+    color.range(isLightMode ? richerColors : darkerColors);
 
     svg.attr("style", `max-width: 100%; height: auto; display: block; margin: 0 -8px; background: ${backgroundColor}; cursor: pointer; font-family: 'Poppins', sans-serif;`);
 
@@ -268,18 +268,18 @@ let radius = width / 9;
 
     label.attr("fill", textColor);
     tooltipText.attr("fill", textColor);
-    tooltipRect.attr("fill", isDarkMode ? "#333" : "#f6f6f6");
+    tooltipRect.attr("fill", isLightMode ? "#f6f6f6" : "#333");
 
     // Update logo
     const logo = document.getElementById('logo');
     if (logo) {
-      logo.src = isDarkMode ? 'dark-logo.png' : 'logo.png';
+      logo.src = isLightMode ? 'logo.png' : 'dark-logo.png';
     }
 
     // Update toggle button text
     const darkModeToggle = document.getElementById('darkModeToggle');
     if (darkModeToggle) {
-      darkModeToggle.textContent = isDarkMode ? "Toggle Light Mode" : "Toggle Dark Mode";
+      darkModeToggle.textContent = isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode";
     }
   }
 
@@ -287,10 +287,13 @@ let radius = width / 9;
   const darkModeToggle = document.getElementById('darkModeToggle');
   if (darkModeToggle) {
     darkModeToggle.addEventListener('click', () => {
-      const isDarkMode = document.body.classList.toggle('dark-mode');
-      updateColors(isDarkMode);
+      const isLightMode = document.body.classList.toggle('light-mode');
+      updateColors(isLightMode);
     });
   }
+
+  // Initialize with dark mode
+  updateColors(false);
 
   return svg.node();
 }
