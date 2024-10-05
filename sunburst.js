@@ -85,8 +85,8 @@ let radius = width / 8;
     const angle = node.x1 - node.x0;
     const radius = (node.y0 + node.y1) / 2;
     const circumference = angle * radius;
-    const maxFontSize = Math.min(10, circumference / 4);
-    const minFontSize = 7;
+    const maxFontSize = Math.min(12, circumference / 4);
+    const minFontSize = 8;
     return Math.max(minFontSize, maxFontSize);
   }
 
