@@ -1,8 +1,8 @@
 function _chart(d3, data) {
   // Specify the chart's dimensions.
-  const width = 928;
-  const height = width;
-  const radius = width / 7;
+let width = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+let height = width;
+let radius = width / 13;
 
   // Create the color scale with richer colors
   const richerColors = [
@@ -85,8 +85,8 @@ function _chart(d3, data) {
     const angle = node.x1 - node.x0;
     const radius = (node.y0 + node.y1) / 2;
     const circumference = angle * radius;
-    const maxFontSize = Math.min(16, circumference / 4);
-    const minFontSize = 11;
+    const maxFontSize = Math.min(10, circumference / 4);
+    const minFontSize = 7;
     return Math.max(minFontSize, maxFontSize);
   }
 
