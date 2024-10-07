@@ -279,7 +279,7 @@ let radius = width / 9;
     // Update toggle button text
     const darkModeToggle = document.getElementById('darkModeToggle');
     if (darkModeToggle) {
-      darkModeToggle.textContent = isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode";
+      darkModeToggle.textContent = isLightMode ? "Toggle Dark Mode" : "Toggle Light Mode";
     }
   }
 
